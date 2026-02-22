@@ -19,10 +19,84 @@
       }
 
       :root {
-        --color-text: #202020;
-        --color-background: #f4f1ea;
-        --color-cta: #f3f9e6;
+        --color-text-base: #202020;
+        --color-background-base: #f4f1ea;
+        --color-cta-base: #f3f9e6;
+
+        --color-text: var(--color-text-base);
+        --color-background: var(--color-background-base);
+        --color-cta: var(--color-cta-base);
+        --color-stroke: #202020;
+
+        --font-size-sm: 0.94rem;
+        --font-size-lg: 1.4rem;
+
+        --letter-spacing: 0.04rem;
+
+        --shadow-offset: 4px;
+
+        --transition-speed: 0.3s ease;
+
+        --space-sm: 0.3rem;
+        --space-md: 1rem;
+        --space-lg: 1.75rem;
+
+        --space-para-gap: 0.5lh;
+        --space-lh-sm: 1lh;
+        --space-lh-md: 2lh;
+        --space-lh-lg: 2.75lh;
       }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-text-base: #c2c0b6;
+          --color-background-base: #262624;
+          --color-cta-base: #302e30;
+          --color-stroke: #0d0d0d;
+        }
+      }
+
+      /* ===================== TROPICAL SHIFT ===================== */
+
+      @property --tropical-progress {
+        syntax: "<percentage>";
+        inherits: true;
+        initial-value: 0%;
+      }
+
+      :root {
+        --color-tropical-text: #400036;
+        --color-tropical-background: #ddf9d6;
+        --color-tropical-cta: #fcffa6;
+
+        --color-text: color-mix(
+          in srgb,
+          var(--color-tropical-text) var(--tropical-progress),
+          var(--color-text-base)
+        );
+        --color-background: color-mix(
+          in srgb,
+          var(--color-tropical-background) var(--tropical-progress),
+          var(--color-background-base)
+        );
+        --color-cta: color-mix(
+          in srgb,
+          var(--color-tropical-cta) var(--tropical-progress),
+          var(--color-cta-base)
+        );
+
+        transition: --tropical-progress 2s ease;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-tropical-text: #ff80d5;
+          --color-tropical-background: #042b04;
+          --color-tropical-cta: #092e2a;
+        }
+      }
+
+      /* ================== END TROPICAL SHIFT =================== */
 
       body {
         font-size: 17px;
@@ -32,40 +106,28 @@
         color: var(--color-text);
       }
 
-      .contact {
-        grid-column: 1/-1;
-        padding-top: 2rem;
-
-        p {
-          text-decoration: none;
-          color: var(--color-text);
-          font-size: 1.4rem;
-          user-select: all;
-        }
-      }
-
       main {
-        padding-top: 2rem;
-        padding-bottom: 4rem;
-        padding-inline: 1.75rem;
+        padding-top: var(--space-lg);
+        padding-bottom: var(--space-lh-lg);
+        padding-inline: var(--space-lg);
       }
 
       .biography {
-        padding-top: 2lh;
+        padding-top: var(--space-lh-md);
       }
 
       .cta {
-        padding-top: 2lh;
+        padding-top: var(--space-lh-md);
         display: flex;
         justify-content: center;
       }
 
       .services {
-        padding-top: 2.75lh;
+        padding-top: var(--space-lh-lg);
       }
 
       .services-list {
-        padding-top: 2lh;
+        padding-top: var(--space-lh-md);
       }
 
       header h1 {
@@ -88,14 +150,14 @@
         border: none;
         cursor: pointer;
         font-family: inherit;
-        font-size: 0.94rem;
+        font-size: var(--font-size-sm);
         font-weight: 500;
         text-transform: uppercase;
-        letter-spacing: 0.04rem;
+        letter-spacing: var(--letter-spacing);
         color: var(--color-text);
         opacity: 0.35;
         text-align: left;
-        padding: 0.3rem 0;
+        padding: var(--space-sm) 0;
         display: block;
         transition: opacity 0.15s;
       }
@@ -108,18 +170,22 @@
         opacity: 0.7;
       }
 
+      .contact {
+        display: none;
+      }
+
       h2 {
-        font-size: 1.4rem;
+        font-size: var(--font-size-lg);
         font-weight: 600;
-        letter-spacing: 0.04rem;
+        letter-spacing: var(--letter-spacing);
       }
 
       h3 {
         text-transform: uppercase;
-        font-size: 0.94rem;
+        font-size: var(--font-size-sm);
         font-weight: 500;
-        letter-spacing: 0.04rem;
-        padding-bottom: 0.5lh;
+        letter-spacing: var(--letter-spacing);
+        padding-bottom: var(--space-para-gap);
         position: relative;
       }
 
@@ -129,30 +195,41 @@
       }
 
       p + p {
-        padding-top: 0.75lh;
+        padding-top: var(--space-para-gap);
+      }
+
+      .contact {
+        grid-column: 1/-1;
+
+        p {
+          text-decoration: none;
+          color: var(--color-text);
+          font-size: var(--font-size-lg);
+          user-select: all;
+        }
       }
 
       .service-item + .service-item {
-        padding-top: 1lh;
+        padding-top: var(--space-lh-sm);
       }
 
       .consultation-button {
-        border: 1.5px solid var(--color-text);
+        border: 1.5px solid var(--color-stroke);
         border-radius: 0.6rem;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 1rem 1rem;
+        padding: var(--space-md);
         text-decoration: none;
         background-color: var(--color-cta);
         color: var(--color-text);
-        box-shadow: 4px 4px var(--color-text);
+        box-shadow: var(--shadow-offset) var(--shadow-offset) var(--color-stroke);
         transform: translate(0, 0);
         transition:
-          background-color 0.3s ease,
-          color 0.3s ease,
-          box-shadow 0.3s ease,
-          transform 0.3s ease;
+          background-color var(--transition-speed),
+          color var(--transition-speed),
+          box-shadow var(--transition-speed),
+          transform var(--transition-speed);
         width: 18rem;
 
         a {
@@ -163,16 +240,20 @@
 
         &:hover,
         &:active {
-          transform: translate(4px, 4px);
+          transform: translate(var(--shadow-offset), var(--shadow-offset));
           box-shadow: 0 0 var(--drop-shadow);
         }
       }
 
       @media (min-width: 657px) {
+        :root {
+          --space-lh-md: 4lh;
+          --space-lh-lg: 4lh;
+        }
         body {
           display: grid;
           grid-template-columns: repeat(12, 1fr);
-          max-width: 48.15rem;
+          max-width: 54rem;
           margin-inline: auto;
           height: 100vh;
           align-items: center;
@@ -183,7 +264,7 @@
           grid-column: 1 / span 3;
           grid-row: 2;
           align-self: start;
-          padding-top: 2rem;
+          padding-top: var(--space-lh-md);
         }
 
         header,
@@ -195,14 +276,16 @@
         main {
           display: grid;
           grid-template-columns: subgrid;
-          grid-template-rows: 70px max(auto, 199px) 116px;
+          grid-template-rows: 70px minmax(199px, auto) 116px;
+          padding-bottom: 0;
+          padding-top: 0;
         }
 
         /* All panels share the same grid area */
         .panel {
           grid-column: 4 / span 7;
           grid-row: 2;
-          padding-top: 2rem;
+          padding-top: var(--space-lh-md);
           display: none;
         }
 
@@ -211,7 +294,7 @@
         }
 
         .cta {
-          padding-top: 4rem;
+          padding-top: var(--space-lh-lg);
           grid-row: 3;
           display: grid;
           grid-template-columns: subgrid;
@@ -221,20 +304,16 @@
           }
         }
 
-        .services {
-          padding-top: 2rem;
-
-          h2 {
-            display: none;
-          }
+        .services h2 {
+          display: none;
         }
 
         .services-list {
           padding-top: 0;
         }
 
-        .contact {
-          padding-top: 2rem;
+        body:not([data-active-panel="biography"]) .cta {
+          display: none;
         }
       }
     </style>
@@ -247,9 +326,21 @@
 
       <nav>
         <ul>
-          <li><button class="nav-btn" data-target="biography">Bio</button></li>
-          <li><button class="nav-btn" data-target="services">Services</button></li>
-          <li><button class="nav-btn" data-target="contact">Contact</button></li>
+          <li>
+            <button type="button" class="nav-btn" data-target="biography">
+              Bio
+            </button>
+          </li>
+          <li>
+            <button type="button" class="nav-btn" data-target="services">
+              Services
+            </button>
+          </li>
+          <li>
+            <button type="button" class="nav-btn" data-target="contact">
+              Contact
+            </button>
+          </li>
         </ul>
       </nav>
 
@@ -306,38 +397,70 @@
     </main>
 
     <script>
-      const panels = document.querySelectorAll('.panel');
-      const navBtns = document.querySelectorAll('.nav-btn');
+      const panels = document.querySelectorAll(".panel");
+      const navBtns = document.querySelectorAll(".nav-btn");
 
       function showPanel(id) {
-        panels.forEach(p => p.classList.remove('active'));
-        navBtns.forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelector(`.nav-btn[data-target="${id}"]`).classList.add('active');
+        panels.forEach((p) => {
+          p.classList.remove("active");
+        });
+        navBtns.forEach((b) => {
+          b.classList.remove("active");
+        });
+        document.getElementById(id).classList.add("active");
+        document
+          .querySelector(`.nav-btn[data-target="${id}"]`)
+          .classList.add("active");
+        document.body.dataset.activePanel = id;
       }
 
-      navBtns.forEach(btn => {
-        btn.addEventListener('click', () => showPanel(btn.dataset.target));
+      navBtns.forEach((btn) => {
+        btn.addEventListener("click", () => showPanel(btn.dataset.target));
       });
 
-      showPanel('biography');
+      showPanel("biography");
+
+      // ===================== TROPICAL SHIFT =====================
+
+      let interactionCount = 0;
+      let tropicalProgress = 0;
+      const INTERACTION_BUFFER = 10;
+
+      function advanceTropical() {
+        interactionCount++;
+        if (interactionCount > INTERACTION_BUFFER && tropicalProgress < 100) {
+          tropicalProgress = Math.min(100, tropicalProgress + 10);
+          document.documentElement.style.setProperty(
+            "--tropical-progress",
+            `${tropicalProgress}%`,
+          );
+        }
+      }
+
+      window.addEventListener("click", advanceTropical);
+
+      document
+        .querySelector(".consultation-button")
+        .addEventListener("mouseenter", advanceTropical);
+
+      // ================== END TROPICAL SHIFT ===================
 
       const BREAKPOINT = 657;
-      const main = document.querySelector('main');
+      const main = document.querySelector("main");
 
       function lockMainPosition() {
         if (window.innerWidth >= BREAKPOINT) {
           // Temporarily restore centering to get the natural centered position,
           // then lock it with a margin so panel switches don't shift the header.
-          document.body.style.alignItems = 'center';
-          main.style.marginTop = '';
+          document.body.style.alignItems = "center";
+          main.style.marginTop = "";
           const top = main.getBoundingClientRect().top;
-          document.body.style.alignItems = 'start';
-          main.style.marginTop = top + 'px';
+          document.body.style.alignItems = "start";
+          main.style.marginTop = `${top}px`;
         } else {
           // Mobile: remove overrides and let CSS handle layout.
-          document.body.style.alignItems = '';
-          main.style.marginTop = '';
+          document.body.style.alignItems = "";
+          main.style.marginTop = "";
         }
       }
 
@@ -345,7 +468,7 @@
       document.fonts.ready.then(lockMainPosition);
 
       // Re-lock on resize so crossing the breakpoint recalculates correctly.
-      window.addEventListener('resize', lockMainPosition);
+      window.addEventListener("resize", lockMainPosition);
     </script>
   </body>
 </html>
