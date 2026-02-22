@@ -19,9 +19,13 @@
       }
 
       :root {
-        --color-text: #202020;
-        --color-background: #f4f1ea;
-        --color-cta: #f3f9e6;
+        --color-text-base: #202020;
+        --color-background-base: #f4f1ea;
+        --color-cta-base: #f3f9e6;
+
+        --color-text: var(--color-text-base);
+        --color-background: var(--color-background-base);
+        --color-cta: var(--color-cta-base);
 
         --font-size-sm: 0.94rem;
         --font-size-lg: 1.4rem;
@@ -41,6 +45,44 @@
         --space-lh-md: 2lh;
         --space-lh-lg: 2.75lh;
       }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-text-base: #C2C0B6;
+          --color-background-base: #262624;
+          --color-cta-base: #302e30;
+        }
+      }
+
+      /* ===================== TROPICAL SHIFT ===================== */
+
+      @property --tropical-progress {
+        syntax: "<percentage>";
+        inherits: true;
+        initial-value: 0%;
+      }
+
+      :root {
+        --color-tropical-text: #400036;
+        --color-tropical-background: #DDF9D6;
+        --color-tropical-cta: #FCFFA6;
+
+        --color-text: color-mix(in srgb, var(--color-tropical-text) var(--tropical-progress), var(--color-text-base));
+        --color-background: color-mix(in srgb, var(--color-tropical-background) var(--tropical-progress), var(--color-background-base));
+        --color-cta: color-mix(in srgb, var(--color-tropical-cta) var(--tropical-progress), var(--color-cta-base));
+
+        transition: --tropical-progress 2s ease;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-tropical-text: #FF80D5;
+          --color-tropical-background: #042B04;
+          --color-tropical-cta: #092E2A;
+        }
+      }
+
+      /* ================== END TROPICAL SHIFT =================== */
 
       body {
         font-size: 17px;
@@ -359,6 +401,31 @@
       });
 
       showPanel("biography");
+
+      // ===================== TROPICAL SHIFT =====================
+
+      let interactionCount = 0;
+      let tropicalProgress = 0;
+      const INTERACTION_BUFFER = 8;
+
+      function advanceTropical() {
+        interactionCount++;
+        if (interactionCount > INTERACTION_BUFFER && tropicalProgress < 100) {
+          tropicalProgress = Math.min(100, tropicalProgress + 10);
+          document.documentElement.style.setProperty(
+            "--tropical-progress",
+            `${tropicalProgress}%`
+          );
+        }
+      }
+
+      window.addEventListener("click", advanceTropical);
+
+      document
+        .querySelector(".consultation-button")
+        .addEventListener("mouseenter", advanceTropical);
+
+      // ================== END TROPICAL SHIFT ===================
 
       const BREAKPOINT = 657;
       const main = document.querySelector("main");
