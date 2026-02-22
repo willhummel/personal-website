@@ -1,192 +1,351 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Will Hummel - Educational Consulting</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+      @import url("reset.css");
+
+      * {
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-text: #202020;
+        --color-background: #f4f1ea;
+        --color-cta: #f3f9e6;
+      }
+
+      body {
+        font-size: 17px;
+        font-family: "Libre Franklin", sans-serif;
+        /*font-family: sans-serif;*/
+        background-color: var(--color-background);
+        color: var(--color-text);
+      }
+
+      .contact {
+        grid-column: 1/-1;
+        padding-top: 2rem;
+
+        p {
+          text-decoration: none;
+          color: var(--color-text);
+          font-size: 1.4rem;
+          user-select: all;
+        }
+      }
+
+      main {
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+        padding-inline: 1.75rem;
+      }
+
+      .biography {
+        padding-top: 2lh;
+      }
+
+      .cta {
+        padding-top: 2lh;
+        display: flex;
+        justify-content: center;
+      }
+
+      .services {
+        padding-top: 2.75lh;
+      }
+
+      .services-list {
+        padding-top: 2lh;
+      }
+
+      header h1 {
+        font-size: clamp(32px, 11vw, 70px);
+        font-weight: 600;
+        letter-spacing: -0.08rem;
+        text-transform: uppercase;
+      }
+
+      nav {
+        display: none;
+      }
+
+      nav ul {
+        list-style: none;
+      }
+
+      .nav-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.94rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.04rem;
+        color: var(--color-text);
+        opacity: 0.35;
+        text-align: left;
+        padding: 0.3rem 0;
+        display: block;
+        transition: opacity 0.15s;
+      }
+
+      .nav-btn.active {
+        opacity: 1;
+      }
+
+      .nav-btn:hover {
+        opacity: 0.7;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: 0.04rem;
+      }
+
+      h3 {
+        text-transform: uppercase;
+        font-size: 0.94rem;
+        font-weight: 500;
+        letter-spacing: 0.04rem;
+        padding-bottom: 0.5lh;
+        position: relative;
+      }
+
+      p,
+      li {
+        line-height: 1.45;
+      }
+
+      p + p {
+        padding-top: 0.75lh;
+      }
+
+      .service-item + .service-item {
+        padding-top: 1lh;
+      }
+
+      .consultation-button {
+        border: 1.5px solid var(--color-text);
+        border-radius: 0.6rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem 1rem;
+        text-decoration: none;
+        background-color: var(--color-cta);
+        color: var(--color-text);
+        box-shadow: 4px 4px var(--color-text);
+        transform: translate(0, 0);
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease,
+          box-shadow 0.3s ease,
+          transform 0.3s ease;
+        width: 18rem;
+
+        a {
+          text-decoration: none;
+          color: var(--color-text);
+          font-weight: 600;
         }
 
+        &:hover,
+        &:active {
+          transform: translate(4px, 4px);
+          box-shadow: 0 0 var(--drop-shadow);
+        }
+      }
+
+      @media (min-width: 657px) {
         body {
-            font-family: 'Crimson Text', serif;
-            background-color: #f4f1ea;
-            color: #1a1a1a;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1.5rem;
+          display: grid;
+          grid-template-columns: repeat(12, 1fr);
+          max-width: 48.15rem;
+          margin-inline: auto;
+          height: 100vh;
+          align-items: center;
         }
 
-        .container {
-            max-width: 42rem;
-            width: 100%;
+        nav {
+          display: grid;
+          grid-column: 1 / span 3;
+          grid-row: 2;
+          align-self: start;
+          padding-top: 2rem;
         }
 
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.25rem;
-            font-weight: 300;
-            letter-spacing: 0.02em;
-            margin-bottom: 0.5rem;
-        }
-
-        .divider-small {
-            height: 1px;
-            width: 6rem;
-            background-color: rgba(26, 26, 26, 0.2);
-            margin: 0 auto 1rem;
-        }
-
-        /* Main Content */
-        main {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
+        header,
+        main,
         section {
-            text-align: center;
+          grid-column: 1 / span 12;
         }
 
-        /* Biography */
-        .biography-box {
-            max-width: 36rem;
-            margin: 0 auto;
-            padding: 1.5rem;
-            border: 1px solid rgba(26, 26, 26, 0.12);
-            background-color: rgba(234, 230, 220, 0.3);
+        main {
+          display: grid;
+          grid-template-columns: subgrid;
+          grid-template-rows: 70px max(auto, 199px) 116px;
         }
 
-        .biography-box p {
-            font-size: 0.9375rem;
-            line-height: 1.65;
-            color: rgba(26, 26, 26, 0.8);
+        /* All panels share the same grid area */
+        .panel {
+          grid-column: 4 / span 7;
+          grid-row: 2;
+          padding-top: 2rem;
+          display: none;
         }
 
-        /* Services  */
-        h2 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.375rem;
-            font-weight: 400;
-            letter-spacing: 0.02em;
-            margin-bottom: 1.25rem;
+        .panel.active {
+          display: block;
         }
 
-        .services-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
+        .cta {
+          padding-top: 4rem;
+          grid-row: 3;
+          display: grid;
+          grid-template-columns: subgrid;
+
+          .consultation-button {
+            grid-column: 4 / span 6;
+          }
         }
 
-        @media (min-width: 768px) {
-            .services-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+        .services {
+          padding-top: 2rem;
+
+          h2 {
+            display: none;
+          }
         }
 
-        .service-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.375rem;
+        .services-list {
+          padding-top: 0;
         }
 
-        .service-item h3 {
-            font-family: 'Crimson Text', serif;
-            font-size: 0.9375rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
+        .contact {
+          padding-top: 2rem;
         }
-
-        .service-item p {
-            font-size: 0.875rem;
-            color: #6b6b6b;
-        }
-
-        /* Divider */
-        .divider-full {
-            height: 1px;
-            width: 100%;
-            background-color: rgba(26, 26, 26, 0.12);
-        }
-
-        /* Contact Button */
-        .consultation-button {
-            display: inline-block;
-            padding: 0.75rem 2rem;
-            border: 1px solid rgba(26, 26, 26, 0.3);
-            background-color: transparent;
-            color: #1a1a1a;
-            font-family: 'Crimson Text', serif;
-            font-size: 0.875rem;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            text-decoration: none;
-            transition: background-color 0.2s ease;
-        }
-
-        .consultation-button:hover {
-            background-color: rgba(26, 26, 26, 0.05);
-        }
+      }
     </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <h1>Will Hummel</h1>
-            <div class="divider-small"></div>
-        </header>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Will Hummel</h1>
+      </header>
 
-        <!-- Main Content -->
-        <main>
-            <!-- Biography -->
-            <section>
-                <div class="biography-box">
-                    <p>Strategic advisor with 15 years of experience in college admissions and independent schools. Formerly Director of College Counseling at The Dalton School, with previous admissions tenures at Pomona College and Barnard College.</p>
-                </div>
-            </section>
+      <nav>
+        <ul>
+          <li><button class="nav-btn" data-target="biography">Bio</button></li>
+          <li><button class="nav-btn" data-target="services">Services</button></li>
+          <li><button class="nav-btn" data-target="contact">Contact</button></li>
+        </ul>
+      </nav>
 
-            <!-- Services -->
-            <section>
-                <h2>Services</h2>
-                <div class="services-grid">
-                    <div class="service-item">
-                        <h3>Educational consulting</h3>
-                        <p>Intentional course selection, extracurricular focus, and institutional navigation</p>
-                    </div>
-                    <div class="service-item">
-                        <h3>Narrative distinction</h3>
-                        <p>Essays that are differentiated and effective</p>
-                    </div>
-                    <div class="service-item">
-                        <h3>Application tactics</h3>
-                        <p>Comprehensive assessment of list construction and application materials</p>
-                    </div>
-                </div>
-            </section>
+      <!-- Biography -->
+      <section class="biography panel" id="biography">
+        <p>
+          Strategic advisor with 15 years of experience in college admissions
+          and independent schools.
+        </p>
+        <p>
+          Formerly Director of College Counseling at The Dalton School,
+          Assistant Dean of Admissions at Pomona College, Application Reader at
+          Barnard College.
+        </p>
+      </section>
 
-            <!-- Divider -->
-            <div class="divider-full"></div>
+      <section class="cta">
+        <div class="consultation-button">
+          <a
+            href="mailto:w.y.hummel@gmail.com?subject=Consultation%20Request&body=Hello%20Will,%0D%0A%0D%0AI%20would%20like%20to%20schedule%20a%20complementary%2020-minute%20consultation.%20I%20am%20available%20during%20the%20following%20days%20and%20times:%0D%0A%5BPlease%20enter%20at%20least%20three%20different%20days%5D"
+            >Request Consultation</a
+          >
+        </div>
+      </section>
 
-            <!-- Contact -->
-            <section>
-                <a href="mailto:w.y.hummel@gmail.com?subject=Consultation%20Request&body=Hello%20Will,%0D%0A%0D%0AI%20would%20like%20to%20schedule%20a%20complementary%2020-minute%20consultation.%20I%20am%20available%20during%20the%20following%20days%20and%20times:%0D%0A%5BPlease%20enter%20at%20least%20three%20different%20days%5D" class="consultation-button">Request a Consultation</a>
-            </section>
-        </main>
-    </div>
-</body>
+      <!-- Services -->
+      <section class="services panel" id="services">
+        <h2>Services</h2>
+        <ul class="services-list">
+          <li class="service-item">
+            <h3>Educational consulting</h3>
+            <p>
+              Intentional course selection, extracurricular focus, and
+              institutional navigation.
+            </p>
+          </li>
+          <li class="service-item">
+            <h3>Narrative distinction</h3>
+            <p>Essays that are differentiated and effective.</p>
+          </li>
+          <li class="service-item">
+            <h3>Application tactics</h3>
+            <p>
+              Comprehensive assessment of list construction and application
+              materials.
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="contact panel" id="contact">
+        <p>w.y.hummel@gmail.com</p>
+      </section>
+    </main>
+
+    <script>
+      const panels = document.querySelectorAll('.panel');
+      const navBtns = document.querySelectorAll('.nav-btn');
+
+      function showPanel(id) {
+        panels.forEach(p => p.classList.remove('active'));
+        navBtns.forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelector(`.nav-btn[data-target="${id}"]`).classList.add('active');
+      }
+
+      navBtns.forEach(btn => {
+        btn.addEventListener('click', () => showPanel(btn.dataset.target));
+      });
+
+      showPanel('biography');
+
+      const BREAKPOINT = 657;
+      const main = document.querySelector('main');
+
+      function lockMainPosition() {
+        if (window.innerWidth >= BREAKPOINT) {
+          // Temporarily restore centering to get the natural centered position,
+          // then lock it with a margin so panel switches don't shift the header.
+          document.body.style.alignItems = 'center';
+          main.style.marginTop = '';
+          const top = main.getBoundingClientRect().top;
+          document.body.style.alignItems = 'start';
+          main.style.marginTop = top + 'px';
+        } else {
+          // Mobile: remove overrides and let CSS handle layout.
+          document.body.style.alignItems = '';
+          main.style.marginTop = '';
+        }
+      }
+
+      // Lock after fonts settle so font metrics don't cause a shift.
+      document.fonts.ready.then(lockMainPosition);
+
+      // Re-lock on resize so crossing the breakpoint recalculates correctly.
+      window.addEventListener('resize', lockMainPosition);
+    </script>
+  </body>
 </html>
