@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Will Hummel — Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-text-base: #202020;
+      --color-background-base: #f4f1ea;
+      --color-cta-base: #f3f9e6;
+      --color-text: var(--color-text-base);
+      --color-background: var(--color-background-base);
+      --color-cta: var(--color-cta-base);
+      --color-stroke: #202020;
+      --font-size-sm: 0.94rem;
+      --letter-spacing: 0.04rem;
+      --shadow-offset: 4px;
+      --transition-speed: 0.3s ease;
+      --space-sm: 0.3rem;
+      --space-md: 1rem;
+      --space-lg: 1.75rem;
+      --space-para-gap: 0.5lh;
+      --space-lh-sm: 1lh;
+      --space-lh-md: 2lh;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-text-base: #c2c0b6;
+        --color-background-base: #262624;
+        --color-cta-base: #302e30;
+        --color-stroke: #0d0d0d;
+      }
+    }
+    @property --tropical-progress { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
+    :root {
+      --color-tropical-text: #400036;
+      --color-tropical-background: #ddf9d6;
+      --color-tropical-cta: #fcffa6;
+      --color-text: color-mix(in srgb, var(--color-tropical-text) var(--tropical-progress), var(--color-text-base));
+      --color-background: color-mix(in srgb, var(--color-tropical-background) var(--tropical-progress), var(--color-background-base));
+      --color-cta: color-mix(in srgb, var(--color-tropical-cta) var(--tropical-progress), var(--color-cta-base));
+      transition: --tropical-progress 2s ease;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --color-tropical-text: #ff80d5; --color-tropical-background: #042b04; --color-tropical-cta: #092e2a; }
+    }
+    body { font-size: 17px; font-family: "Libre Franklin", sans-serif; background-color: var(--color-background); color: var(--color-text); min-height: 100vh; padding: var(--space-lg); }
+    header h1 { font-size: clamp(32px, 11vw, 70px); font-weight: 600; letter-spacing: -0.08rem; text-transform: uppercase; line-height: 1; }
+    .subtitle { font-size: var(--font-size-sm); opacity: 0.5; padding-top: var(--space-sm); letter-spacing: var(--letter-spacing); }
+    .tagline { font-size: var(--font-size-sm); opacity: 0.7; padding-top: var(--space-lh-sm); line-height: 1.55; max-width: 44rem; font-style: italic; }
+    .layout { display: grid; grid-template-columns: 1fr; padding-top: var(--space-lh-md); max-width: 54rem; margin-inline: auto; }
+    @media (min-width: 657px) {
+      body { max-width: 54rem; margin-inline: auto; }
+      .layout { grid-template-columns: 3fr 7fr; gap: 0 2rem; align-items: start; }
+    }
+    .sidebar { padding-bottom: var(--space-lh-md); }
+    .sidebar-label { font-size: var(--font-size-sm); font-weight: 500; text-transform: uppercase; letter-spacing: var(--letter-spacing); opacity: 0.4; padding-bottom: var(--space-sm); }
+    .sidebar-label.filter-heading { opacity: 0.75; letter-spacing: 0.06rem; }
+    .filter-list { list-style: none; }
+    .filter-btn { background: none; border: none; cursor: pointer; font-family: inherit; font-size: var(--font-size-sm); font-weight: 500; text-transform: uppercase; letter-spacing: var(--letter-spacing); color: var(--color-text); opacity: 0.35; text-align: left; padding: var(--space-sm) 0; display: block; transition: opacity 0.15s; width: 100%; }
+    .filter-btn:hover { opacity: 0.65; }
+    .filter-btn.active { opacity: 1; }
+    .filter-btn.active::before { content: "→ "; font-weight: 600; }
+    .clear-btn { background: none; border: none; cursor: pointer; font-family: inherit; font-size: var(--font-size-sm); font-weight: 400; letter-spacing: var(--letter-spacing); color: var(--color-text); opacity: 0.25; text-align: left; padding: var(--space-sm) 0; display: none; margin-top: var(--space-sm); transition: opacity 0.15s; }
+    .clear-btn.visible { display: block; }
+    .clear-btn:hover { opacity: 0.5; }
+    .results-label { font-size: var(--font-size-sm); opacity: 0.4; letter-spacing: var(--letter-spacing); min-height: 1.45em; padding-bottom: var(--space-lh-sm); }
+    #expList { transition: opacity 0.15s ease; }
+    #expList.fading { opacity: 0; }
+    .exp-item { padding-bottom: var(--space-lh-md); }
+    .exp-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-bottom: var(--space-para-gap); }
+    .exp-title { font-size: var(--font-size-sm); font-weight: 500; text-transform: uppercase; letter-spacing: var(--letter-spacing); }
+    .exp-dates { font-size: var(--font-size-sm); opacity: 0.4; white-space: nowrap; letter-spacing: var(--letter-spacing); flex-shrink: 0; }
+    .exp-org { font-size: var(--font-size-sm); opacity: 0.5; padding-bottom: var(--space-para-gap); letter-spacing: var(--letter-spacing); }
+    .bullet-list { list-style: none; padding: 0; }
+    .bullet-item { display: flex; gap: 0.6rem; padding: 0.2rem 0; }
+    .bullet-dash { opacity: 0.3; flex-shrink: 0; padding-top: 0.02em; user-select: none; }
+    .bullet-text { font-size: var(--font-size-sm); line-height: 1.45; opacity: 0.7; }
+    .edu-section { padding-top: var(--space-lh-sm); border-top: 1px solid currentColor; opacity: 0.5; margin-bottom: var(--space-lh-md); }
+    .edu-row { display: flex; justify-content: space-between; align-items: baseline; padding-top: var(--space-para-gap); gap: 1rem; flex-wrap: wrap; }
+    .edu-degree { font-size: var(--font-size-sm); font-weight: 500; text-transform: uppercase; letter-spacing: var(--letter-spacing); }
+    .edu-detail { font-size: var(--font-size-sm); text-align: right; }
+    .cta-wrap { padding-top: var(--space-lh-sm); }
+    .consultation-button { border: 1.5px solid var(--color-stroke); border-radius: 0.6rem; display: inline-flex; justify-content: center; align-items: center; padding: var(--space-md) 1.5rem; text-decoration: none; background-color: var(--color-cta); color: var(--color-text); box-shadow: var(--shadow-offset) var(--shadow-offset) var(--color-stroke); transform: translate(0,0); transition: background-color var(--transition-speed), color var(--transition-speed), box-shadow var(--transition-speed), transform var(--transition-speed); font-family: inherit; font-size: var(--font-size-sm); font-weight: 600; text-transform: uppercase; letter-spacing: var(--letter-spacing); cursor: pointer; }
+    .consultation-button:hover, .consultation-button:active { transform: translate(var(--shadow-offset), var(--shadow-offset)); box-shadow: 0 0 var(--color-stroke); }
+    @media (max-width: 656px) {
+      .filter-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: var(--space-md); }
+      .filter-btn { border: 1px solid currentColor; border-radius: 2rem; padding: 0.25rem 0.75rem; width: auto; opacity: 0.35; font-size: 0.8rem; }
+      .filter-btn.active { opacity: 1; }
+      .filter-btn.active::before { content: ""; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Will Hummel</h1>
+    <p class="subtitle">w.y.hummel@gmail.com</p>
+    <p class="tagline">During my 15 years as an educator I have served as a senior administrator, teacher, student advisor, college counselor, curriculum designer, program builder, and admissions officer. I've spent that time doing two things simultaneously: helping institutions function well, and asking whether they could function better. The work I find most energizing sits at the intersection of rigorous content, ambitious program design, and a school culture that treats hard questions as an asset rather than a threat.</p>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-label filter-heading">Filter by skill</div>
+      <ul class="filter-list" id="filterList">
+        <li><button class="filter-btn" data-skill="Leadership & Management">Leadership</button></li>
+        <li><button class="filter-btn" data-skill="Teaching">Teaching</button></li>
+        <li><button class="filter-btn" data-skill="Program Management">Program Management</button></li>
+        <li><button class="filter-btn" data-skill="Curriculum & Program Design">Curriculum</button></li>
+        <li><button class="filter-btn" data-skill="Student Advising">Student Advising</button></li>
+        <li><button class="filter-btn" data-skill="Admissions">Admissions</button></li>
+        <li><button class="filter-btn" data-skill="Public Speaking">Public Speaking</button></li>
+      </ul>
+      <button class="clear-btn" id="clearBtn">Clear filters</button>
+    </aside>
+
+    <div class="content">
+      <div class="results-label" id="resultsLabel"></div>
+      <div id="expList"></div>
+      <div class="edu-section">
+        <div class="sidebar-label">Education</div>
+        <div class="edu-row">
+          <span class="edu-degree">BA, Environmental Analysis — Pomona College</span>
+          <span class="edu-detail">Cum laude · Distinction in Senior Exercise</span>
+        </div>
+      </div>
+      <div class="edu-section" id="civicSection">
+        <div class="sidebar-label">Civic &amp; Additional</div>
+        <ul class="bullet-list" id="civicList" style="padding-top: var(--space-para-gap);"></ul>
+      </div>
+      <div class="cta-wrap">
+        <a class="consultation-button" href="mailto:w.y.hummel@gmail.com?subject=Resume%20Inquiry">Get in touch</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const EXPERIENCES = [
+      {
+        title: "High School Project Coordinator & Teacher",
+        org: "The Dalton School — New York, NY",
+        dates: "2022 – Present",
+        bullets: [
+          { text: "Design and teach three original year-long upper-level electives: Critical Theory & Politics in the 21st Century; Climate Politics & Environmental Justice; Urban Studies: Place and Community in New York City. Each integrates multiple disciplines, fieldwork, and unconventional assignments and assessments.", skills: ["Teaching", "Curriculum & Program Design", "Research & Writing"] },
+          { text: "Serve as House Advisor for ~20 students across grades 9–12, providing academic guidance and social-emotional support.", skills: ["Teaching", "Student Advising"] },
+          { text: "Founded and continue to lead Dalton's Intersession program — a week-long experiential learning intensive for 400+ students and faculty. Built the program's full infrastructure, oversee development of ~25 immersive courses annually, and manage $50K program budget.", skills: ["Program Management", "Leadership & Management", "Curriculum & Program Design"] },
+          { text: "Manage all internal and external application processes for semester-away programs; advise students and families through selection, preparation, and reintegration.", skills: ["Program Management", "Admissions", "Student Advising"] },
+        ]
+      },
+      {
+        title: "Director of College Counseling",
+        org: "The Dalton School — New York, NY",
+        dates: "2020 – 2022",
+        bullets: [
+          { text: "Led five-person office; hired two new staff members, managed $72K annual budget, redesigned full arc of counseling program introducing a more data-driven advising approach and messaging.", skills: ["Leadership & Management", "Program Management"] },
+          { text: "Carried caseload of 50 students; worked with each student to navigate the college process in a personalized and authentic way; authored individualized letters of recommendation for college and scholarship applicants.", skills: ["Admissions", "Student Advising"] },
+          { text: "Delivered public presentations to audiences ranging from 10 to 350 parents, students, and faculty.", skills: ["Public Speaking"] },
+          { text: "One of 11 members of Dalton's COVID-19 Future Planning Committee; instrumental in building adapted daily schedule, academic calendar, grading, and assessment frameworks that governed the school's remote/hybrid year.", skills: ["Program Management", "Leadership & Management"] },
+          { text: "Developed and led school-wide programming on racial justice during summer and fall 2020.", skills: ["Teaching", "Curriculum & Program Design"] },
+          { text: "Hosted 50+ college admissions representatives on campus annually; attended NACAC, College Board, and regional conferences to maintain active relationships across the college admissions landscape.", skills: ["Admissions", "Leadership & Management"] },
+        ]
+      },
+      {
+        title: "Associate Director of College Counseling",
+        org: "The Dalton School — New York, NY",
+        dates: "2017 – 2019",
+        bullets: [
+          { text: "Redesigned curriculum for College Group Meeting, Dalton's semester-long college preparation class for juniors and seniors; created and led college essay writing workshops.", skills: ["Teaching", "Curriculum & Program Design"] },
+          { text: "Served on Calendar Committee reimagining academic calendar, assessment structures, and January term.", skills: ["Program Management", "Curriculum & Program Design"] },
+          { text: "Served on 10+ faculty and administrative search committees, including Director of DEI and Mathematics Department Chair.", skills: ["Leadership & Management"] },
+        ]
+      },
+      {
+        title: "College Counselor",
+        org: "The Dalton School — New York, NY",
+        dates: "2015 – 2017",
+        bullets: [
+          { text: "Conceived, organized, and emceed the 2018 High School Symposium on Policing, Incarceration, and Justice — a full-day event for the entire high school featuring 40 visitors from 20+ local organizations, followed by a six-event community series drawing ~25 attendees per session.", skills: ["Program Management", "Leadership & Management", "Public Speaking"] },
+          { text: "Designed and taught six-week mini-course: Problems of Philosophy.", skills: ["Teaching", "Curriculum & Program Design", "Research & Writing"] },
+        ]
+      },
+      {
+        title: "Application Reader",
+        org: "Barnard College — New York, NY",
+        dates: "2019 – 2020",
+        bullets: [
+          { text: "Evaluated ~600 applications from high school students across the domestic applicant pool.", skills: ["Admissions"] },
+        ]
+      },
+      {
+        title: "Assistant Dean of Admissions",
+        org: "Pomona College — Claremont, CA",
+        dates: "2014 – 2015",
+        bullets: [
+          { text: "Rewrote office Reader Guide; trained admissions staff and part-time readers in evaluative methodology, establishing consistent review standards across the full application pool.", skills: ["Admissions", "Leadership & Management"] },
+          { text: "Built new athlete recruiting and selection system adopted institution-wide; managed four athletic liaisons.", skills: ["Program Management", "Admissions", "Leadership & Management"] },
+          { text: "Managed a multi-state and international recruitment territory spanning California, the Mountain West, Illinois, Hawaii, Australia, and East Asia.", skills: ["Admissions"] },
+          { text: "Read and evaluated 840+ applications per cycle across first-year and transfer pools; participated in committee deliberations on class composition and institutional priorities.", skills: ["Admissions"] },
+          { text: "Presented information sessions to groups up to 400; traveled nationally for recruitment and college fairs.", skills: ["Public Speaking", "Admissions"] },
+        ]
+      },
+      {
+        title: "Admissions Officer",
+        org: "Pomona College — Claremont, CA",
+        dates: "2012 – 2014",
+        bullets: [
+          { text: "Designed and launched Student Ambassador program; directed Tour Guide and Overnight Hosting programs for thousands of annual visitors.", skills: ["Program Management", "Leadership & Management", "Public Speaking"] },
+          { text: "Led diversity recruitment and outreach to traditionally underserved student communities.", skills: ["Admissions"] },
+        ]
+      },
+    ];
+
+    const CIVIC = [
+      { text: "People's Education Initiative — Volunteer Instructor", dates: "2015–2017", skills: ["Teaching", "Curriculum & Program Design"] },
+      { text: "Books Through Bars — Volunteer", dates: "2017–2019", skills: [] },
+      { text: "Kingswood Oxford Leadership Institute for Educators of Color — Participant", dates: "2018", skills: ["Leadership & Management", "Teaching"] },
+      { text: "California Institute for Women Writing Workshop — Volunteer", dates: "2013", skills: ["Teaching"] },
+    ];
+
+    let activeSkills = new Set();
+
+    function buildList() {
+      const list = document.getElementById('expList');
+      list.innerHTML = '';
+      const sorted = activeSkills.size === 0
+        ? EXPERIENCES
+        : EXPERIENCES.filter(exp => exp.bullets.some(b => b.skills.some(s => activeSkills.has(s))))
+            .sort((a, b) => {
+              const aScore = a.bullets.filter(b => b.skills.some(s => activeSkills.has(s))).length;
+              const bScore = b.bullets.filter(b => b.skills.some(s => activeSkills.has(s))).length;
+              return bScore - aScore;
+            });
+
+      sorted.forEach(exp => {
+        const visibleBullets = activeSkills.size === 0
+          ? exp.bullets
+          : exp.bullets.filter(b => b.skills.some(s => activeSkills.has(s)));
+        const bulletsHtml = visibleBullets.map(b =>
+          `<li class="bullet-item"><span class="bullet-dash">—</span><span class="bullet-text">${b.text}</span></li>`
+        ).join('');
+        const el = document.createElement('div');
+        el.className = 'exp-item';
+        el.innerHTML = `
+          <div class="exp-meta">
+            <span class="exp-title">${exp.title}</span>
+            <span class="exp-dates">${exp.dates}</span>
+          </div>
+          <div class="exp-org">${exp.org}</div>
+          <ul class="bullet-list">${bulletsHtml}</ul>
+        `;
+        list.appendChild(el);
+      });
+
+      const civicList = document.getElementById('civicList');
+      civicList.innerHTML = '';
+      const visibleCivic = activeSkills.size === 0
+        ? CIVIC
+        : CIVIC.filter(item => item.skills.some(s => activeSkills.has(s)));
+      visibleCivic.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'bullet-item';
+        li.innerHTML = `<span class="bullet-dash">—</span><span class="bullet-text">${item.text} <span style="opacity:0.5">${item.dates}</span></span>`;
+        civicList.appendChild(li);
+      });
+
+      document.getElementById('civicSection').style.display =
+        (activeSkills.size === 0 || visibleCivic.length > 0) ? '' : 'none';
+
+      const label = document.getElementById('resultsLabel');
+      if (activeSkills.size > 0) {
+        const matchedRoles = EXPERIENCES.filter(e => e.bullets.some(b => b.skills.some(s => activeSkills.has(s)))).length;
+        const matchedBullets = EXPERIENCES.flatMap(e => e.bullets).filter(b => b.skills.some(s => activeSkills.has(s))).length;
+        label.textContent = `${matchedRoles} roles · ${matchedBullets} highlights — ${[...activeSkills].join(', ')}`;
+      } else {
+        label.textContent = '';
+      }
+    }
+
+    function render() {
+      const list = document.getElementById('expList');
+      list.classList.add('fading');
+      setTimeout(() => { buildList(); list.classList.remove('fading'); }, 150);
+    }
+
+    document.getElementById('filterList').addEventListener('click', e => {
+      const btn = e.target.closest('[data-skill]');
+      if (!btn) return;
+      const skill = btn.dataset.skill;
+      if (activeSkills.has(skill)) { activeSkills.delete(skill); btn.classList.remove('active'); }
+      else { activeSkills.add(skill); btn.classList.add('active'); }
+      document.getElementById('clearBtn').classList.toggle('visible', activeSkills.size > 0);
+      render();
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      activeSkills.clear();
+      document.querySelectorAll('[data-skill]').forEach(b => b.classList.remove('active'));
+      document.getElementById('clearBtn').classList.remove('visible');
+      render();
+    });
+
+    buildList();
+
+    // TROPICAL SHIFT
+    let interactionCount = 0, tropicalProgress = 0;
+    const INTERACTION_BUFFER = 100;
+    function advanceTropical() {
+      interactionCount++;
+      if (interactionCount > INTERACTION_BUFFER && tropicalProgress < 100) {
+        tropicalProgress = Math.min(100, tropicalProgress + 10);
+        document.documentElement.style.setProperty('--tropical-progress', `${tropicalProgress}%`);
+      }
+    }
+    window.addEventListener('click', advanceTropical);
+    document.querySelector('.consultation-button').addEventListener('mouseenter', advanceTropical);
+  </script>
+</body>
+</html>
