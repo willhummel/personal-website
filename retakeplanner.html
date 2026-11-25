@@ -924,7 +924,7 @@ function renderSignal(pairs){
   const v = retakeVerdict(scored, smallGain);
   inner = scaleBar(v.level) + `<h2>${v.label}</h2>`;
   const moved = movedSentence(v, 'If you hit your target, you’d');
-  if (moved) inner += `<p>${moved}</p><div class="mvs">${moveList('Below range → In range', v.big)}${moveList('In range → Above range', v.small)}</div>`;
+  if (moved) inner += `<p>${moved}</p><div class="mvs">${moveList('Below range → In range', v.big.filter(m=>m.then.best.status==='in'))}${moveList('Below range → Above range', v.big.filter(m=>m.then.best.status==='above'))}${moveList('In range → Above range', v.small)}</div>`;
   else if (!v.notGreen) inner += `<p>You’re already above range at every college on your list.</p>`;
   el.innerHTML = box('lv'+v.level, inner + whatItTakes(v.level));
 }
