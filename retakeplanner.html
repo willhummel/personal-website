@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAT &amp; ACT Retake Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Matches willhummel.com: Libre Franklin, warm paper and charcoal, offset-shadow buttons. Left rail = your scores; right = colleges, then the verdict. */
+:root{
+  --paper:#F4F1EA;
+  --surface:#FAF8F3;
+  --ink:#202020;
+  --muted:#66635C;
+  --rule:#DAD5C8;
+  --stroke:#202020;
+  --cta:#F3F9E6;
+  --band:#E7E1D2;
+  --band-edge:#8C8675;
+  --accent:#6E2A60;
+  --accent-soft:#F1E4EC;
+  --red:#A23B2A;   --red-bg:#F4DDD5;
+  --yellow:#7E5B00; --yellow-bg:#F3E5B9; --yellow-edge:#D2A12A;
+  --green:#3C6A38; --green-bg:#DFE9D2;
+  --display:"Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --body:"Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --track:.04rem;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#262624; --surface:#2D2C2A; --ink:#C2C0B6; --muted:#8F8D85; --rule:#3E3D39; --stroke:#0D0D0D; --cta:#302E30;
+    --band:#3A3935; --band-edge:#8F8D85; --accent:#E890D2; --accent-soft:#3B2B37;
+    --red:#E8907F; --red-bg:#3D2620; --yellow:#E2BD5C; --yellow-bg:#3A3220; --yellow-edge:#B8902C;
+    --green:#9CC78F; --green-bg:#263522;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#262624; --surface:#2D2C2A; --ink:#C2C0B6; --muted:#8F8D85; --rule:#3E3D39; --stroke:#0D0D0D; --cta:#302E30;
+  --band:#3A3935; --band-edge:#8F8D85; --accent:#E890D2; --accent-soft:#3B2B37;
+  --red:#E8907F; --red-bg:#3D2620; --yellow:#E2BD5C; --yellow-bg:#3A3220; --yellow-edge:#B8902C;
+  --green:#9CC78F; --green-bg:#263522;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.45 var(--body);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+.num{font-variant-numeric:tabular-nums}
+
+.wrap{max-width:1140px;margin:0 auto;padding:28px 20px 56px}
+.top{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between;padding-bottom:24px;border-bottom:1.5px solid var(--ink);margin-bottom:28px}
+.home{display:inline-block;font-size:.94rem;font-weight:500;text-transform:uppercase;letter-spacing:var(--track);color:var(--ink);opacity:.45;text-decoration:none;margin-bottom:18px;transition:opacity .15s}
+.home:hover{opacity:.8}
+.top h1{font-size:clamp(30px,6vw,56px);font-weight:600;line-height:1;letter-spacing:-.08rem;text-transform:uppercase}
+.top p{margin:12px 0 0;max-width:60ch;color:var(--muted)}
+.cycle{display:flex;flex-direction:column;gap:6px}
+.cycle span{font-size:.94rem;font-weight:500;text-transform:uppercase;letter-spacing:var(--track);color:var(--muted)}
+
+.seg{display:inline-flex;border:1.5px solid var(--stroke);border-radius:.6rem;padding:2px;background:var(--surface)}
+.seg button{border:0;background:transparent;padding:6px 12px;border-radius:.45rem;cursor:pointer;font-size:14px;color:var(--muted);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);font-weight:600}
+.seg.small button{padding:3px 9px;font-size:13px}
+
+.grid{display:grid;grid-template-columns:350px minmax(0,1fr);gap:28px;align-items:start}
+.rail{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;padding-right:4px}
+.rail h2,.main h2{font-size:1.4rem;font-weight:600;letter-spacing:var(--track)}
+.rail h3{font-size:.94rem;font-weight:500;text-transform:uppercase;letter-spacing:var(--track);margin:26px 0 4px}
+.rail-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
+.linkbtn{border:0;background:none;color:var(--accent);cursor:pointer;padding:2px 0;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.example{font-size:13px;background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin-bottom:12px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+
+.sit{background:var(--surface);border:1px solid var(--rule);border-radius:.6rem;padding:10px 12px 12px;margin-bottom:10px;border-left:4px solid var(--ink)}
+.sit.target{border-left:4px dashed var(--accent)}
+.sit header{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.tag{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:var(--track);padding:2px 7px;border-radius:4px;background:var(--ink);color:var(--paper)}
+.sit.target .tag{background:var(--accent)}
+.sit .lbl{flex:1;min-width:0;border:0;border-bottom:1px dashed var(--rule);background:transparent;padding:2px 2px;font-size:14px}
+.sit .fixed{flex:1;font-size:14px;font-weight:600}
+.x{border:0;background:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:0 4px}
+.x:hover{color:var(--red)}
+.fields{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.fields label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:3px}
+.fields input,.fields select{width:66px;padding:6px 7px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);font-variant-numeric:tabular-nums;font-size:15px;color:var(--ink)}
+.fields input.bad{border-color:var(--red)}
+.total{margin-left:auto;text-align:right}
+.total span{display:block;font-size:12px;color:var(--muted)}
+.total b{font-family:var(--display);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.sit-foot{margin-top:10px;font-size:12px;color:var(--muted)}
+.sit-foot select{padding:3px 6px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);font-size:12px;margin-left:4px}
+.addrow{display:flex;gap:8px;margin:12px 0 4px;flex-wrap:wrap}
+.btn{border:1.5px solid var(--stroke);background:var(--cta);color:var(--ink);border-radius:.6rem;padding:8px 14px;cursor:pointer;font-weight:600;font-size:14px;box-shadow:4px 4px 0 var(--stroke);transform:translate(0,0);transition:transform .3s ease, box-shadow .3s ease;margin:0 4px 4px 0;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.btn:hover,.btn:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--stroke)}
+.btn.tgt{color:var(--accent)}
+.btn[disabled]{opacity:.4;cursor:not-allowed;box-shadow:none;transform:none}
+.hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+
+/* computed scores */
+.scorebox{background:var(--surface);border:1.5px solid var(--stroke);border-radius:.6rem;box-shadow:4px 4px 0 var(--stroke);padding:12px 14px;margin-top:8px}
+.scorebox table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.scorebox th{font-size:12px;font-weight:500;color:var(--muted);text-align:right;padding:0 0 6px}
+.scorebox th:first-child{text-align:left}
+.scorebox td{text-align:right;padding:6px 0;border-top:1px solid var(--rule);vertical-align:top}
+.scorebox td:first-child{text-align:left;font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:var(--track)}
+.scorebox .v{font-family:var(--display);font-weight:600;font-size:24px;line-height:1.1}
+.scorebox .t{display:block;font-size:13px;color:var(--accent);font-weight:600}
+.scorebox .comp{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.45}
+
+/* colleges */
+.sch-head{display:grid;gap:14px;margin-bottom:16px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.controls label{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.controls select{padding:5px 8px;border:1px solid var(--rule);border-radius:6px;background:var(--surface);font-size:13px}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-left:auto}
+.key span{display:flex;align-items:center;gap:5px}
+.key i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.adder{position:relative;max-width:460px}
+.adder-label{display:block;font-size:.94rem;font-weight:600;margin-bottom:6px}
+.adder input{width:100%;padding:11px 14px 11px 38px;border:1.5px solid var(--stroke);border-radius:.6rem;background:var(--cta) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23808080' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='M11 11l4 4'/%3E%3C/svg%3E") no-repeat 13px center;font-size:15px;box-shadow:4px 4px 0 var(--stroke)}
+.adder input:focus{outline:none;transform:translate(2px,2px);box-shadow:2px 2px 0 var(--stroke)}
+.adder input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.sugg{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 4px);background:var(--surface);border:1px solid var(--rule);border-radius:8px;box-shadow:0 8px 24px rgba(20,30,50,.14);padding:4px;display:none}
+.sugg.open{display:block}
+.sugg button{display:flex;justify-content:space-between;width:100%;text-align:left;border:0;background:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:14px;gap:10px}
+.sugg button:hover,.sugg button:focus-visible{background:var(--accent-soft)}
+.sugg small{color:var(--muted)}
+
+.list{display:grid;gap:6px}
+.col{background:var(--surface);border:1px solid var(--rule);border-left:6px solid var(--rule);border-radius:.6rem}
+.col.st-below{border-left-color:var(--red)}
+.col.st-in{border-left-color:var(--yellow-edge)}
+.col.st-above{border-left-color:var(--green)}
+.col summary{list-style:none;display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.col summary::-webkit-details-marker{display:none}
+.col summary .nm{font-weight:600;font-size:16px;flex:1;min-width:0}
+.col summary .right{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-left:auto}
+.col summary .stat{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.col summary .chev{width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin:0 4px 3px 4px;transition:transform .15s}
+.col[open] summary .chev{transform:rotate(-135deg);margin-bottom:-3px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.p-below{background:var(--red-bg);color:var(--red)}
+.p-in{background:var(--yellow-bg);color:var(--yellow)}
+.p-above{background:var(--green-bg);color:var(--green)}
+.p-none{background:var(--paper);color:var(--muted)}
+.p-none::before{display:none}
+.withtgt{font-size:12.5px;color:var(--accent);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.withtgt .pill{font-size:12px;padding:2px 8px}
+.rowbtn{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
+.rowbtn:hover{color:var(--red)}
+.addbtn{border:1px solid var(--rule);background:var(--surface);border-radius:6px;font-size:12px;padding:2px 8px;cursor:pointer;color:var(--accent);font-weight:600}
+.addbtn[aria-pressed="true"]{color:var(--muted);font-weight:500}
+.emptylist{padding:28px 20px;color:var(--muted);background:var(--surface);border:1px solid var(--rule);border-radius:.6rem}
+
+.detail{padding:4px 16px 16px;border-top:1px solid var(--rule);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:8px 28px}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin:12px 0 0;align-content:start}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0}
+.where{margin-top:12px}
+.where p{margin:0 0 4px;font-size:14px;max-width:60ch}
+.where p.tg{color:var(--accent)}
+.note{font-size:12.5px;color:var(--muted);margin-top:8px}
+
+.pos{position:relative;height:96px;margin:6px 0 2px}
+.pos .track{position:absolute;left:0;right:0;top:49px;height:2px;background:var(--rule)}
+.pos .band{position:absolute;top:41px;height:18px;background:var(--band);border:1px solid var(--band-edge);border-radius:3px}
+.pos .end{position:absolute;top:64px;font-size:13px;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.15;white-space:nowrap}
+.pos .end small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
+.pos .end.l{transform:translateX(-100%);text-align:right;padding-right:4px}
+.pos .end.r{padding-left:4px}
+.pos .end.c{transform:translateX(-50%);text-align:center}
+.mk{position:absolute;top:43px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--ink);z-index:2}
+.mk.tgt{background:var(--surface);border:2.5px solid var(--accent);z-index:3}
+.mlab{position:absolute;transform:translateX(-50%);font-size:12.5px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.mlab.tgt{color:var(--accent)}
+.arrow{position:absolute;top:49px;height:2px;background:var(--accent);z-index:1}
+
+details.custom{margin-top:12px;padding:4px 0}
+details.custom summary{cursor:pointer;font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;width:max-content}
+details.custom[open]{background:var(--surface);border:1px solid var(--rule);border-radius:.6rem;padding:12px 16px}
+.cform{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:12px}
+.cform label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:3px}
+.cform input,.cform select{padding:6px 8px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);font-size:14px;color:var(--ink)}
+.cform input[type=number]{width:78px}
+.cform .wide{width:210px}
+.err{color:var(--red);font-size:13px;width:100%}
+
+/* summary at bottom */
+.summary-sec{margin-top:32px}
+.summary-sec > h2{margin-bottom:10px}
+.signal{background:var(--surface);border:1.5px solid var(--stroke);border-radius:.6rem;padding:20px 22px;box-shadow:4px 4px 0 var(--stroke)}
+.scale{list-style:none;padding:0;margin:0 0 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.scale li{font-size:12.5px;font-weight:500;text-transform:uppercase;letter-spacing:var(--track);text-align:center;padding:7px 4px;border:1px solid var(--rule);border-radius:.45rem;color:var(--muted);line-height:1.2}
+.scale li.on{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:600}
+.signal .adj{font-size:14px;color:var(--muted)}
+.mvs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 24px}
+.mv h3{font-size:.85rem;font-weight:500;text-transform:uppercase;letter-spacing:var(--track);color:var(--muted);margin:16px 0 0}
+.signal h2{font-size:clamp(26px,3vw,34px);font-weight:600;letter-spacing:-.04rem;text-transform:uppercase}
+.signal p{margin:6px 0 0;max-width:70ch}
+.moves{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
+.moves li{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:14px}
+.moves b{font-weight:600}
+.moves .pill{font-size:12px;padding:2px 8px}
+.to{color:var(--accent);font-weight:700}
+.nx{font-size:13px;color:var(--muted)}
+.wins{margin-top:14px;border-top:1px solid var(--rule);padding-top:12px}
+.wins h3{font-size:.85rem;font-weight:500;text-transform:uppercase;letter-spacing:var(--track);color:var(--muted);margin-bottom:6px}
+.wins p{font-size:14px;margin:0 0 6px}
+.wins p.need{font-size:16px;margin:10px 0 2px}
+.wins p.need b{font-weight:600}
+.actions{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.toast{font-size:13px;color:var(--green)}
+
+footer.how{margin-top:44px;border-top:1.5px solid var(--ink);padding-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;font-size:14px}
+footer.how h3{font-size:.94rem;font-weight:500;text-transform:uppercase;letter-spacing:var(--track);margin-bottom:6px}
+footer.how p,footer.how li{color:var(--muted);max-width:62ch}
+footer.how ul{padding-left:18px;margin:6px 0}
+
+.consult{margin-top:44px;padding-top:28px;border-top:1.5px solid var(--ink);display:grid;justify-items:start;gap:10px}
+.consult h2{font-size:1.4rem;font-weight:600;letter-spacing:var(--track)}
+.consult p{margin:0;max-width:60ch}
+.consult .btn{width:18rem;padding:14px;font-size:16px;margin-top:6px}
+@media (max-width: 980px){
+  .grid{grid-template-columns:1fr}
+  .rail{position:static;max-height:none;overflow:visible}
+}
+@media (max-width: 720px){
+  .detail{grid-template-columns:1fr}
+  .key{margin-left:0}
+}
+@media (prefers-reduced-motion: reduce){
+  .col summary .chev{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <a class="home" href="https://willhummel.com">Will Hummel</a>
+      <h1>SAT &amp; ACT Retake Planner</h1>
+      <p>Enter your official scores and a realistic target score, based on your practice tests. See how that target score might change your standing at each college on your list, and whether a retake is worthwhile.</p>
+    </div>
+    <div class="cycle">
+      <span id="cycle-label">I'm applying for</span>
+      <div class="seg" role="group" aria-labelledby="cycle-label" id="cycle">
+        <button type="button" data-cycle="2027">Fall 2027 entry</button>
+        <button type="button" data-cycle="2028">Fall 2028 entry</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid">
+    <aside class="rail" aria-label="Your scores">
+      <div class="rail-head"><h2>Your official scores</h2><button type="button" class="linkbtn" id="clear-all">Clear all</button></div>
+      <div id="example-note"></div>
+      <div id="sittings"></div>
+      <div class="addrow">
+        <button type="button" class="btn" data-add="SAT">Add SAT</button>
+        <button type="button" class="btn" data-add="ACT">Add ACT</button>
+      </div>
+
+      <h3>Target score</h3>
+      <p class="hint">Estimate realistically based on your practice tests.</p>
+      <div id="targets"></div>
+      <div class="addrow">
+        <button type="button" class="btn tgt" data-target="SAT">Add SAT target</button>
+        <button type="button" class="btn tgt" data-target="ACT">Add ACT target</button>
+      </div>
+
+      <h3>What your scores add up to</h3>
+      <div id="scorebox"></div>
+    </aside>
+
+    <main class="main">
+      <section aria-labelledby="sch-title">
+        <div class="sch-head">
+          <h2 id="sch-title">Colleges</h2>
+          <div class="adder">
+            <label for="search" class="adder-label">Add a college to your list</label>
+            <input id="search" type="search" placeholder="Search by name, e.g. Tufts" autocomplete="off" aria-controls="sugg">
+            <div class="sugg" id="sugg" role="listbox"></div>
+          </div>
+        </div>
+        <div class="controls">
+          <div class="seg small" role="group" aria-label="Which colleges to show" id="view">
+            <button type="button" data-view="list">My list</button>
+            <button type="button" data-view="all">All colleges</button>
+          </div>
+          <label for="sort">Sort
+            <select id="sort"><option value="list">Default order</option><option value="low">Below range first</option><option value="high">Above range first</option><option value="name">Name</option></select>
+          </label>
+          <div class="key" aria-label="Color key">
+            <span><i style="background:var(--red)"></i>Below range</span>
+            <span><i style="background:var(--yellow-edge)"></i>In range</span>
+            <span><i style="background:var(--green)"></i>Above range</span>
+          </div>
+        </div>
+        <p class="hint">“Range” is the college's middle 50%: the 25th to 75th percentile. Select a college for details.</p>
+        <div class="list" id="table"></div>
+
+        <details class="custom">
+          <summary>College not listed? Add it by hand</summary>
+          <form class="cform" id="cform" novalidate>
+            <label for="c-name">College name<input id="c-name" class="wide" required></label>
+            <label for="c-s25">SAT 25th<input id="c-s25" type="number" min="400" max="1600" step="10"></label>
+            <label for="c-s75">SAT 75th<input id="c-s75" type="number" min="400" max="1600" step="10"></label>
+            <label for="c-a25">ACT 25th<input id="c-a25" type="number" min="1" max="36"></label>
+            <label for="c-a75">ACT 75th<input id="c-a75" type="number" min="1" max="36"></label>
+            <label for="c-pol">Testing policy<select id="c-pol"><option value="opt">Test-optional</option><option value="req">Required</option><option value="free">Test-free</option></select></label>
+            <label for="c-ss">SAT counted as<select id="c-ss"><option value="y">Superscore</option><option value="n">Best single sitting</option></select></label>
+            <label for="c-sa">ACT counted as<select id="c-sa"><option value="y">Superscore</option><option value="n">Best single sitting</option></select></label>
+            <button class="btn primary" type="submit">Add college</button>
+            <div class="err" id="c-err" role="alert"></div>
+          </form>
+          <p class="hint" style="margin-top:10px">Find these in the college's Common Data Set, section C9, or its class profile page.</p>
+        </details>
+      </section>
+
+      <section class="summary-sec" aria-labelledby="sum-title">
+        <h2 id="sum-title">Summary</h2>
+        <div id="signal" aria-live="polite"></div>
+        <div class="actions">
+          <button type="button" class="btn" id="copy">Copy summary</button>
+          <span class="toast" id="toast" role="status"></span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <section class="consult" aria-labelledby="consult-title">
+    <h2 id="consult-title">Want help planning your testing?</h2>
+    <p>I'll look at your scores, your list and your timeline with you.</p>
+    <a class="btn" href="mailto:will@willhummel.com?subject=Consultation%20Request&amp;body=Hello%20Will,%0D%0A%0D%0AI%20would%20like%20to%20schedule%20a%20complimentary%2020-minute%20consultation.%20I%20am%20available%20during%20the%20following%20days%20and%20times:%0D%0A%5BPlease%20enter%20at%20least%20three%20different%20days%5D">Request Consultation</a>
+    <p class="nx">Or email <span class="num">will@willhummel.com</span></p>
+  </section>
+
+  <footer class="how">
+    <div>
+      <h3>Notes</h3>
+      <ul>
+        <li>Ranges are the middle 50% of <b>enrolled</b> first-years who submitted scores, from each college's most recent Common Data Set (mostly the fall 2025 class). At test-optional colleges only submitters are counted, which pushes ranges up.</li>
+        <li>Superscores follow each college's stated policy. Where a college only partly superscores, the planner counts your best single sitting to stay conservative.</li>
+        <li>ACT composites since September 2025 average English, math and reading; science doesn't count. Scores on different tests are compared with the official 2018 ACT/SAT concordance and are never mixed into one superscore.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Sources</h3>
+      <ul>
+        <li><a href="https://www.compassprep.com/college-profiles-new-sat/">Compass Education Group, college score ranges and testing policies</a> (updated July 1, 2026)</li>
+        <li><a href="https://www.compassprep.com/superscore-and-score-choice/">Compass, superscore and Score Choice policies</a></li>
+        <li><a href="https://www.act.org/content/act/en/products-and-services/the-act/scores/act-sat-concordance.html">ACT/College Board concordance tables</a></li>
+        <li>Policy checks on admissions sites: Princeton, Columbia, Notre Dame, Claremont McKenna, Vanderbilt, Penn State. Caltech's 2025–26 Common Data Set; UT Austin via IPEDS.</li>
+      </ul>
+      <p>Policies change every cycle. Confirm on each college's admissions site before you decide.</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ===== Scoring logic (pure functions) =====
+const ACT2SAT = {36:1590,35:1540,34:1500,33:1460,32:1430,31:1400,30:1370,29:1340,28:1310,27:1280,26:1240,25:1210,24:1180,23:1140,22:1110,21:1080,20:1040,19:1010,18:970,17:930,16:890,15:850,14:800,13:760,12:710,11:670,10:630,9:590};
+const SAT2ACT = [[1570,36],[1530,35],[1490,34],[1450,33],[1420,32],[1390,31],[1360,30],[1330,29],[1300,28],[1260,27],[1230,26],[1200,25],[1160,24],[1130,23],[1100,22],[1060,21],[1030,20],[990,19],[960,18],[920,17],[880,16],[830,15],[780,14],[730,13],[690,12],[650,11],[620,10],[590,9]];
+function satToAct(s){ for (const [min,a] of SAT2ACT) if (s >= min) return a; return 8; }
+function actToSat(a){ if (a >= 36) return 1590; if (a < 9) return 560; return ACT2SAT[a]; }
+
+const isNum = v => typeof v === 'number' && isFinite(v);
+function validSat(x){ return x.test==='SAT' && isNum(x.erw) && isNum(x.math) && x.erw>=200 && x.erw<=800 && x.math>=200 && x.math<=800; }
+function validAct(x){ return x.test==='ACT' && [x.eng,x.math,x.read].every(v=>isNum(v)&&v>=1&&v<=36); }
+function actComposite(x){
+  if (x.version==='legacy' && isNum(x.sci)) return Math.round((x.eng+x.math+x.read+x.sci)/4);
+  return Math.round((x.eng+x.math+x.read)/3);
+}
+// mode: 'super' | 'single'
+function satScore(sittings, mode){
+  const v = sittings.filter(validSat); if (!v.length) return null;
+  if (mode==='super'){
+    const be = v.reduce((a,b)=>b.erw>a.erw?b:a), bm = v.reduce((a,b)=>b.math>a.math?b:a);
+    return {total: be.erw+bm.math, parts:[{k:'R&W',v:be.erw,from:be.label},{k:'Math',v:bm.math,from:bm.label}]};
+  }
+  const best = v.reduce((a,b)=>(b.erw+b.math)>(a.erw+a.math)?b:a);
+  return {total: best.erw+best.math, parts:[{k:'R&W',v:best.erw,from:best.label},{k:'Math',v:best.math,from:best.label}]};
+}
+function actScore(sittings, mode){
+  const v = sittings.filter(validAct); if (!v.length) return null;
+  if (mode==='super'){
+    const pick = k => v.reduce((a,b)=>b[k]>a[k]?b:a);
+    const e=pick('eng'), m=pick('math'), r=pick('read');
+    return {total: Math.round((e.eng+m.math+r.read)/3), parts:[{k:'English',v:e.eng,from:e.label},{k:'Math',v:m.math,from:m.label},{k:'Reading',v:r.read,from:r.label}]};
+  }
+  const best = v.reduce((a,b)=>actComposite(b)>actComposite(a)?b:a);
+  return {total: actComposite(best), parts:[{k:'English',v:best.eng,from:best.label},{k:'Math',v:best.math,from:best.label},{k:'Reading',v:best.read,from:best.label}]};
+}
+
+function midOf(range, test){
+  const m = (range[0]+range[1])/2;
+  return test==='SAT' ? Math.ceil(m/10)*10 : Math.ceil(m);
+}
+// 0 below 25th, 1 lower half, 2 upper half, 3 at/above 75th
+function rankIn(s, range, test){
+  const [lo,hi] = range;
+  if (s >= hi) return 3;
+  if (s < lo) return 0;
+  return s >= midOf(range,test) ? 2 : 1;
+}
+function nextStop(s, range, test){
+  const [lo,hi] = range, mid = midOf(range,test);
+  if (s < lo) return {to:'25th percentile', at:lo, gain:lo-s};
+  if (s < mid) return {to:'midpoint', at:mid, gain:mid-s};
+  if (s < hi) return {to:'75th percentile', at:hi, gain:hi-s};
+  return null;
+}
+function policyFor(school, cycle){ return cycle===2028 ? (school.p28 || school.p27) : school.p27; }
+
+// Evaluate one school for a set of sittings
+function evalSchool(school, sittings, cycle, boost){
+  const policy = policyFor(school, cycle);
+  const out = {policy, best:null, sat:null, act:null};
+  if (policy==='free') return {...out, verdict:'free'};
+  const satMode = school.sS==='y' ? 'super' : 'single';
+  const actMode = school.sA==='y' ? 'super' : 'single';
+  let sat = satScore(sittings.filter(x=>x.test==='SAT'), satMode);
+  let act = actScore(sittings.filter(x=>x.test==='ACT'), actMode);
+  // boost: hypothetical next-test total, e.g. {SAT:1500}; counts as max(current counted score, boost)
+  if (boost && boost.SAT!=null) sat = {total: Math.max(sat?sat.total:0, boost.SAT), parts: sat?sat.parts:[]};
+  if (boost && boost.ACT!=null) act = {total: Math.max(act?act.total:0, boost.ACT), parts: act?act.parts:[]};
+  out.sat = sat; out.act = act;
+  const cands = [];
+  if (sat){
+    if (school.s) cands.push({test:'SAT', score:sat.total, cmpTest:'SAT', cmpScore:sat.total, range:school.s, concorded:false});
+    else if (school.a) { const c=satToAct(sat.total); cands.push({test:'SAT', score:sat.total, cmpTest:'ACT', cmpScore:c, range:school.a, concorded:true}); }
+  }
+  if (act){
+    if (school.a) cands.push({test:'ACT', score:act.total, cmpTest:'ACT', cmpScore:act.total, range:school.a, concorded:false});
+    else if (school.s) { const c=actToSat(act.total); cands.push({test:'ACT', score:act.total, cmpTest:'SAT', cmpScore:c, range:school.s, concorded:true}); }
+  }
+  cands.forEach(c=>{
+    c.rank = rankIn(c.cmpScore, c.range, c.cmpTest);
+    const [lo,hi]=c.range; c.pos = (c.cmpScore-lo)/Math.max(hi-lo, c.cmpTest==='SAT'?10:1);
+    c.next = c.concorded ? null : nextStop(c.cmpScore, c.range, c.cmpTest);
+  });
+  cands.forEach(c=>{ const [lo,hi]=c.range; c.status = c.cmpScore < lo ? 'below' : c.cmpScore >= hi ? 'above' : 'in'; });
+  cands.sort((a,b)=> b.rank-a.rank || b.pos-a.pos);
+  out.best = cands[0] || null;
+  out.cands = cands;
+  if (!out.best) return {...out, verdict: (sat||act) ? 'norange' : 'noscore'};
+  if (policy==='req') return {...out, verdict:'required'};
+  const r = out.best.rank;
+  return {...out, verdict: r>=2 ? 'submit' : r===1 ? 'borderline' : 'withhold'};
+}
+
+// Has the decision materially changed between two evaluations?
+const VORDER = {withhold:0, borderline:1, submit:2};
+function compareEval(now, then){
+  if (!now.best || !then.best) return {moved: !!then.best && !now.best, decision: !!then.best && !now.best};
+  const moved = then.best.rank > now.best.rank;
+  let decision = false;
+  if (now.verdict==='required') decision = (now.best.rank===0 && then.best.rank>=1) || (now.best.rank===1 && then.best.rank>=2);
+  else if (VORDER[then.verdict] > VORDER[now.verdict]) decision = true;
+  return {moved, decision};
+}
+
+// ===== Retake verdict =====
+// pairs: [{now, then}] evaluations of official vs official+target for colleges on the list.
+// smallGain: true when every target is < 30 SAT / < 1 ACT superscore points above the current superscore.
+const LEVELS = ['Retake','Lean retake','Toss up','No retake'];
+function retakeVerdict(pairs, smallGain){
+  const big = [], small = [];
+  let notGreen = 0;
+  pairs.forEach(p=>{
+    const a = p.now.best, b = p.then.best;
+    if (!a) return;
+    if (a.status!=='above') notGreen++;
+    if (!b) return;
+    if (a.status==='below' && b.status!=='below') big.push(p);
+    else if (a.status==='in' && b.status==='above') small.push(p);
+  });
+  let base;
+  if (big.length >= 2 || big.length + small.length >= 5) base = 0;
+  else if (big.length >= 1 || small.length >= 3) base = 1;
+  else if (small.length >= 1) base = 2;
+  else base = 3;  // target changes nothing anywhere = no retake
+  const adjusted = smallGain && base <= 2;
+  const level = adjusted ? base + 1 : base;
+  return {level, label: LEVELS[level], base, baseLabel: LEVELS[base], adjusted, big, small, notGreen};
+}
+
+// Lowest next-test score on test T that would reach verdict level `goal` (0 = Retake, 1 = Lean retake).
+function scoreNeeded(schools, officialSittings, cycle, T, goal){
+  const fn = T==='SAT' ? satScore : actScore;
+  const cur = fn(officialSittings.filter(s=>s.test===T), 'super'); if (!cur) return null;
+  const step = T==='SAT' ? 10 : 1, max = T==='SAT' ? 1600 : 36, thr = T==='SAT' ? 30 : 1;
+  const nows = schools.map(s=>evalSchool(s, officialSittings, cycle));
+  for (let x = cur.total + step; x <= max; x += step){
+    const pairs = schools.map((s,i)=>({school:s, now:nows[i], then:evalSchool(s, officialSittings, cycle, {[T]:x})})).filter(p=>p.now.best||p.then.best);
+    const v = retakeVerdict(pairs, x - cur.total < thr);
+    if (v.level <= goal) return {T, score:x, gain:x-cur.total, current:cur.total, v};
+  }
+  return null;
+}
+
+if (typeof module !== 'undefined') module.exports = {satToAct, actToSat, satScore, actScore, actComposite, rankIn, midOf, nextStop, evalSchool, compareEval, retakeVerdict, scoreNeeded, LEVELS};
+
+// ===== School data =====
+// s/a: middle-50% (25th–75th) SAT total / ACT composite of enrolled first-years who submitted scores.
+// p27/p28: testing policy for fall 2027 / fall 2028 entry. sS/sA: superscore SAT/ACT (y = yes, w = partial, n = single sitting).
+const R = (n,k,s,a,p27,o={}) => ({n,k,s,a,p27,p28:o.p28||p27,sS:o.sS||'y',sA:o.sA||'y',note:o.note||''});
+const SCHOOLS = [
+  // Required for fall 2027
+  R('Harvard','U',[1510,1580],[34,36],'req',{sS:'w',sA:'n'}),
+  R('Stanford','U',[1520,1570],[34,36],'req',{sA:'w'}),
+  R('MIT','U',[1520,1570],[34,36],'req',{note:'Requires you to send all scores'}),
+  R('Yale','U',[1470,1560],[33,35],'req',{note:'SAT or ACT only; AP/IB no longer substitutes'}),
+  R('Johns Hopkins','U',[1530,1570],[35,35],'req',{note:'Recommends sending all scores'}),
+  R('UPenn','U',[1510,1570],[34,36],'req',{note:'Hardship waiver available; recommends sending all scores'}),
+  R('Dartmouth','U',[1440,1550],[32,35],'req'),
+  R('Brown','U',[1470,1550],[33,35],'req'),
+  R('Cornell','U',[1490,1550],[33,35],'req'),
+  R('Caltech','U',[1550,1580],[35,36],'req',{sA:'w',note:'SAT total estimated from section ranges (R&W 760–780, Math 790–800)'}),
+  R('Georgetown','U',[1410,1530],[32,35],'req',{sS:'n',sA:'n',note:'Does not superscore'}),
+  R('Carnegie Mellon','U',[1500,1560],[34,36],'req',{sA:'n',note:'Some colleges accept AP/IB in place of SAT/ACT'}),
+  R('Georgia Tech','U',[1370,1530],[31,35],'req'),
+  R('University of Georgia','U',[1250,1420],[27,33],'req'),
+  R('University of Florida','U',[1330,1470],[29,33],'req'),
+  R('Florida State','U',[1300,1410],[29,32],'req'),
+  R('UT Austin','U',[1250,1510],[27,33],'req',{sS:'n',sA:'n',note:'Ranges are fall 2024 (federal IPEDS data); UT has not published newer ones'}),
+  R('Purdue','U',[1220,1470],[28,34],'req',{sS:'w',sA:'w'}),
+  R('University of Miami','U',[1350,1450],[30,33],'req'),
+  R('University of Tennessee','U',[1280,1380],[26,31],'req'),
+  R('Auburn','U',[1260,1380],[26,31],'req',{note:'Recommends sending all scores'}),
+  R('Ohio State','U',[1300,1440],[27,32],'req'),
+  // Optional for fall 2027, required for fall 2028
+  R('Princeton','U',[1490,1560],[34,35],'opt',{p28:'req',sA:'n',note:'Required again from fall 2028 entry'}),
+  R('Columbia','U',[1510,1560],[34,36],'opt',{p28:'req',note:'Required again from fall 2028 entry'}),
+  R('Notre Dame','U',[1460,1540],[33,35],'opt',{p28:'req',note:'Required again from fall 2028 entry'}),
+  R('Claremont McKenna','L',[1480,1540],[33,35],'opt',{p28:'req',note:'Required again from fall 2028 entry'}),
+  R('University of Alabama','U',[1100,1360],[22,31],'opt',{p28:'req',note:'Fall 2027: required only below a 3.0 GPA'}),
+  // Test-optional universities
+  R('UChicago','U',[1510,1560],[34,35],'opt'),
+  R('Duke','U',[1510,1570],[34,35],'opt'),
+  R('Northwestern','U',[1510,1560],[34,35],'opt'),
+  R('Vanderbilt','U',[1510,1560],[34,35],'opt',{note:'Required again from fall 2029 entry'}),
+  R('Rice','U',[1500,1570],[34,36],'opt',{note:'Recommends sending all scores'}),
+  R('WashU','U',[1500,1570],[33,35],'opt'),
+  R('Emory','U',[1480,1540],[33,35],'opt'),
+  R('USC','U',[1450,1550],[32,35],'opt'),
+  R('NYU','U',[1480,1550],[34,35],'opt'),
+  R('Tufts','U',[1460,1520],[33,35],'opt'),
+  R('Boston College','U',[1440,1520],[33,35],'opt'),
+  R('Boston University','U',[1420,1510],[33,34],'opt'),
+  R('Northeastern','U',[1440,1510],[33,34],'opt'),
+  R('University of Michigan','U',[1360,1530],[31,34],'opt'),
+  R('University of Virginia','U',[1410,1510],[32,34],'opt',{sA:'w'}),
+  R('UNC Chapel Hill','U',[1400,1530],[28,34],'opt'),
+  R('Wake Forest','U',[1420,1490],[32,34],'opt'),
+  R('Tulane','U',[1430,1500],[32,34],'opt'),
+  R('University of Rochester','U',[1400,1510],[30,34],'opt'),
+  R('Case Western Reserve','U',[1440,1530],[32,34],'opt'),
+  R('Lehigh','U',[1380,1480],[31,34],'opt'),
+  R('Villanova','U',[1420,1490],[32,34],'opt'),
+  R('University of Richmond','U',[1430,1510],[33,35],'opt'),
+  R('William & Mary','U',[1390,1520],[32,34],'opt'),
+  R('Brandeis','U',[1370,1470],[31,34],'opt'),
+  R('UIUC','U',[1390,1520],[31,34],'opt',{sS:'w',sA:'w'}),
+  R('UW–Madison','U',[1370,1490],[29,33],'opt',{sS:'n',sA:'n'}),
+  R('University of Maryland','U',[1410,1520],[32,35],'opt'),
+  R('University of Washington','U',[1320,1500],[30,34],'opt'),
+  R('Virginia Tech','U',[1280,1450],[28,32],'opt'),
+  R('Penn State','U',[1280,1410],[28,32],'opt',{sS:'n',sA:'n'}),
+  R('Rutgers–New Brunswick','U',[1310,1500],[28,33],'opt',{sA:'n'}),
+  R('University of Pittsburgh','U',[1280,1450],[29,33],'opt'),
+  R('Fordham','U',[1340,1470],[30,33],'opt'),
+  R('Syracuse','U',[1270,1440],[29,32],'opt'),
+  R('George Washington','U',[1310,1450],[31,34],'opt'),
+  R('American University','U',[1320,1440],[30,33],'opt'),
+  R('SMU','U',[1360,1470],[31,34],'opt'),
+  R('Santa Clara','U',[1330,1470],[29,33],'opt'),
+  R('Clemson','U',[1250,1400],[28,32],'opt'),
+  R('Texas A&M','U',[1160,1390],[24,32],'opt',{sS:'n',sA:'n'}),
+  R('Baylor','U',[1190,1370],[26,32],'opt'),
+  R('TCU','U',[1110,1330],[26,31],'opt'),
+  R('UConn','U',[1220,1420],[28,33],'opt'),
+  R('UMass Amherst','U',[1330,1480],[30,34],'opt'),
+  R('Binghamton','U',[1360,1480],[31,34],'opt'),
+  R('Stony Brook','U',[1350,1470],[30,34],'opt',{sA:'n'}),
+  R('RPI','U',[1390,1500],[30,34],'opt',{sA:'n'}),
+  R('Stevens Institute','U',[1370,1470],[32,34],'opt'),
+  R('Colorado School of Mines','U',[1320,1480],[29,33],'opt'),
+  R('Indiana University','U',[1200,1410],[28,33],'opt'),
+  R('CU Boulder','U',[1180,1390],[27,33],'opt'),
+  R('University of Minnesota','U',[1310,1460],[26,32],'opt',{sS:'n',sA:'n'}),
+  R('Michigan State','U',[1100,1310],[25,31],'opt',{sS:'n',sA:'n'}),
+  R('Babson','U',[1450,1530],[32,34],'opt'),
+  R('Howard','U',[1050,1250],[22,28],'opt',{sA:'n'}),
+  R('Spelman','L',[1100,1300],[22,28],'opt'),
+  R('Elon','U',[1190,1340],[25,31],'opt'),
+  R('Miami University (OH)','U',[1240,1380],[25,30],'opt'),
+  R('Loyola Marymount','U',[1270,1410],[28,33],'opt',{sA:'n'}),
+  R('Pepperdine','U',[1240,1410],[28,32],'opt',{sA:'n'}),
+  R('Chapman','U',[1260,1420],[28,32],'opt'),
+  R('Furman','U',[1280,1410],[29,33],'opt'),
+  R('Rhodes','L',[1360,1470],[28,32],'opt'),
+  // Liberal arts colleges
+  R('Williams','L',[1490,1550],[33,35],'opt'),
+  R('Amherst','L',[1470,1540],[33,35],'opt',{note:'Recommends sending all scores'}),
+  R('Swarthmore','L',[1480,1550],[33,35],'opt'),
+  R('Pomona','L',[1490,1550],[32,34],'opt'),
+  R('Bowdoin','L',[1470,1540],[33,35],'opt'),
+  R('Middlebury','L',[1460,1530],[33,35],'opt'),
+  R('Wellesley','L',[1460,1540],[33,35],'opt',{sS:'n',sA:'n'}),
+  R('Harvey Mudd','L',[1500,1560],[35,36],'opt'),
+  R('Carleton','L',[1460,1530],[32,35],'opt',{sA:'n',note:'Requires you to send all scores'}),
+  R('Hamilton','L',[1440,1510],[33,35],'opt'),
+  R('Colby','L',[1460,1550],[32,34],'opt'),
+  R('Davidson','L',[1410,1500],[32,34],'opt'),
+  R('Haverford','L',[1460,1530],[33,35],'opt'),
+  R('Vassar','L',[1460,1520],[33,34],'opt'),
+  R('Wesleyan','L',[1300,1500],[31,34],'opt'),
+  R('Barnard','L',[1480,1540],[32,34],'opt'),
+  R('Grinnell','L',[1430,1520],[31,34],'opt'),
+  R('Colgate','L',[1450,1530],[33,34],'opt'),
+  R('Washington and Lee','L',[1430,1530],[33,34],'opt'),
+  R('Bates','L',[1330,1510],[31,34],'opt'),
+  R('Smith','L',[1420,1520],[32,34],'opt',{sA:'n'}),
+  R('Macalester','L',[1350,1480],[30,33],'opt'),
+  R('Colorado College','L',[1240,1430],[28,34],'opt',{sA:'n'}),
+  R('Kenyon','L',[1400,1500],[31,34],'opt'),
+  R('Oberlin','L',[1370,1500],[31,34],'opt'),
+  R('Bryn Mawr','L',[1300,1470],[29,33],'opt',{sA:'n'}),
+  R('Scripps','L',[1430,1500],[32,34],'opt'),
+  R('Occidental','L',[1400,1510],[31,34],'opt'),
+  R('Skidmore','L',[1360,1460],[31,34],'opt'),
+  R('Bucknell','L',[1170,1360],[25,32],'opt'),
+  R('Lafayette','L',[1360,1490],[31,33],'opt'),
+  R('Holy Cross','L',[1240,1410],[27,32],'opt'),
+  R('Trinity College (CT)','L',[1350,1460],[31,33],'opt'),
+  R('Union College','L',[1320,1470],[30,34],'opt'),
+  R('Dickinson','L',[1340,1440],[29,32],'opt'),
+  R('Mount Holyoke','L',[1370,1490],[30,32],'opt'),
+  R('Franklin & Marshall','L',[1310,1470],[29,32],'opt'),
+  R('Connecticut College','L',[1160,1370],[26,32],'opt'),
+  // Test-free
+  R('UCLA','U',null,null,'free',{note:'University of California does not consider SAT/ACT'}),
+  R('UC Berkeley','U',null,null,'free',{note:'University of California does not consider SAT/ACT'}),
+  R('UC San Diego','U',null,null,'free',{note:'University of California does not consider SAT/ACT'}),
+];
+SCHOOLS.forEach((s,i)=>s.id='s'+i);
+
+
+// ===== App =====
+const KEY = 'retake-planner-v2';
+const BAND = ['Below 25th','Lower half','Upper half','75th+'];
+const STATUS = {below:'Below range', in:'In range', above:'Above range'};
+const VERDICT = {submit:'Send scores', borderline:'Judgment call', withhold:'Apply test-optional', required:'Required', free:'Not considered', norange:'No published range', noscore:'Add a score'};
+let uid = 1;
+const mkSit = (test, kind, label, vals={}) => ({id:'t'+(uid++), test, kind, label, version:'enhanced', ...vals});
+const openRows = new Set();
+
+function exampleState(){
+  const ids = n => SCHOOLS.find(s=>s.n===n).id;
+  return {
+    cycle:2027, view:'list', sort:'list', example:true, custom:[],
+    sittings:[
+      mkSit('SAT','official','March 2026',{erw:690, math:720}),
+      mkSit('SAT','official','August 2026',{erw:720, math:700}),
+      mkSit('SAT','target','SAT target',{erw:730, math:740}),
+    ],
+    list:['Cornell','Georgetown','Tufts','Boston College','University of Michigan','University of Virginia','Northeastern','Wake Forest','Wellesley','Lehigh','University of Rochester','Penn State'].map(ids)
+  };
+}
+let state;
+try { state = JSON.parse(localStorage.getItem(KEY)); } catch(e){ state = null; }
+if (!state || !Array.isArray(state.sittings)) state = exampleState();
+state.sittings.forEach(s=>{ const n=parseInt(String(s.id).slice(1)); if (n>=uid) uid=n+1; });
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const allSchools = () => SCHOOLS.concat(state.custom || []);
+const byId = id => allSchools().find(s=>s.id===id);
+const official = () => state.sittings.filter(s=>s.kind==='official');
+const targets = () => state.sittings.filter(s=>s.kind==='target');
+const projected = () => state.sittings;
+const sitValid = s => s.test==='SAT' ? validSat(s) : validAct(s);
+const hasTarget = () => targets().some(sitValid);
+
+// ---------- Score entry ----------
+function sitTotal(s){ if (!sitValid(s)) return '—'; return s.test==='SAT' ? s.erw+s.math : actComposite(s); }
+function numInput(s, f, label, min, max, step){
+  const v = s[f]; const bad = v!=null && v!=='' && (v<min || v>max);
+  return `<label for="${s.id}-${f}">${label}<input id="${s.id}-${f}" type="number" inputmode="numeric" data-f="${f}" min="${min}" max="${max}" step="${step}" value="${v ?? ''}" class="${bad?'bad':''}"></label>`;
+}
+function sitCard(s){
+  const isT = s.kind==='target';
+  const legacy = !isT && s.version==='legacy';
+  const fields = s.test==='SAT'
+    ? numInput(s,'erw','R&W',200,800,10) + numInput(s,'math','Math',200,800,10)
+    : numInput(s,'eng','English',1,36,1) + numInput(s,'math','Math',1,36,1) + numInput(s,'read','Reading',1,36,1) + (legacy ? numInput(s,'sci','Science',1,36,1) : '');
+  const ver = (s.test==='ACT' && !isT) ? `<div class="sit-foot"><label for="${s.id}-ver">Test version<select id="${s.id}-ver" data-f="version"><option value="enhanced" ${s.version!=='legacy'?'selected':''}>Sept 2025 or later</option><option value="legacy" ${s.version==='legacy'?'selected':''}>Before Sept 2025</option></select></label></div>` : '';
+  const name = isT ? `<span class="fixed">Target</span>` : `<input class="lbl" data-f="label" value="${esc(s.label)}" aria-label="Test date" placeholder="Test date, e.g. March 2026">`;
+  return `<article class="sit ${s.kind}" data-id="${s.id}">
+    <header><span class="tag">${s.test}</span>${name}<button type="button" class="x" data-act="remove" aria-label="Remove this ${s.test}${isT?' target':''}">×</button></header>
+    <div class="fields">${fields}<div class="total"><span>${s.test==='SAT'?'Total':'Composite'}</span><b class="num" data-total>${sitTotal(s)}</b></div></div>${ver}
+  </article>`;
+}
+function renderSittings(){
+  $('#example-note').innerHTML = state.example ? `<div class="example"><span>These are example scores. Replace them with yours.</span><button type="button" class="linkbtn" id="clear-ex">Start blank</button></div>` : '';
+  const off = official(), tg = targets();
+  $('#sittings').innerHTML = off.length ? off.map(sitCard).join('') : `<p class="hint">No official scores yet. Add each SAT or ACT sitting below.</p>`;
+  $('#targets').innerHTML = tg.map(sitCard).join('');
+  document.querySelectorAll('[data-target]').forEach(b=>{ b.disabled = tg.some(s=>s.test===b.dataset.target); });
+}
+function onInput(e){
+  const card = e.target.closest('.sit'); if (!card) return;
+  const s = state.sittings.find(x=>x.id===card.dataset.id); const f = e.target.dataset.f; if (!s||!f) return;
+  if (f==='label') s.label = e.target.value;
+  else if (f==='version') { s.version = e.target.value; if (s.version!=='legacy') delete s.sci; renderSittings(); }
+  else { const v = e.target.value===''? null : Number(e.target.value); s[f] = v; const mn=+e.target.min, mx=+e.target.max; e.target.classList.toggle('bad', v!=null && (v<mn||v>mx)); }
+  const t = card.querySelector('[data-total]'); if (t) t.textContent = sitTotal(s);
+  if (state.example) { state.example=false; $('#example-note').innerHTML=''; }
+  save(); renderResults();
+}
+function onRemove(e){
+  const b = e.target.closest('[data-act="remove"]'); if (!b) return;
+  const id = b.closest('.sit').dataset.id; state.sittings = state.sittings.filter(x=>x.id!==id);
+  save(); renderSittings(); renderResults();
+}
+['#sittings','#targets'].forEach(sel=>{ $(sel).addEventListener('input', onInput); $(sel).addEventListener('click', onRemove); });
+document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{
+  const t=b.dataset.add, n=official().filter(s=>s.test===t).length+1;
+  state.sittings.push(mkSit(t,'official',`${t} ${n}`));
+  save(); renderSittings(); renderResults();
+  const last = document.querySelector('#sittings .sit:last-child input[type=number]'); if (last) last.focus();
+}));
+document.querySelectorAll('[data-target]').forEach(b=>b.addEventListener('click',()=>{
+  const t=b.dataset.target; if (targets().some(s=>s.test===t)) return;
+  state.sittings.push(mkSit(t,'target',`${t} target`));
+  save(); renderSittings(); renderResults();
+  const f = document.querySelector(`#targets .sit:last-child input[type=number]`); if (f) f.focus();
+}));
+$('#clear-all').addEventListener('click',()=>{ state.sittings=[]; state.example=false; save(); renderSittings(); renderResults(); });
+$('#example-note').addEventListener('click',e=>{ if(e.target.id==='clear-ex'){ state.sittings=[]; state.example=false; save(); renderSittings(); renderResults(); }});
+
+function renderScorebox(){
+  const el = $('#scorebox'); const rows=[]; const comps=[];
+  for (const T of ['SAT','ACT']){
+    const fn = T==='SAT'?satScore:actScore;
+    const o = official().filter(s=>s.test===T), p = projected().filter(s=>s.test===T);
+    const sing=fn(o,'single'), sup=fn(o,'super'), singP=fn(p,'single'), supP=fn(p,'super');
+    if (!sing && !singP) continue;
+    const tgtHas = targets().some(s=>s.test===T && sitValid(s));
+    const cell = (a,b) => `<span class="v">${a?a.total:'—'}</span>${tgtHas && b && (!a || b.total!==a.total) ? `<span class="t">→ ${b.total} with target</span>` : ''}`;
+    rows.push(`<tr><td>${T}</td><td>${cell(sing,singP)}</td><td>${cell(sup,supP)}</td></tr>`);
+    if (sup && o.filter(sitValid).length>1) comps.push(`${T} superscore: ${sup.parts.map(x=>`${x.k} ${x.v} (${esc(x.from)})`).join(' + ')}`);
+  }
+  el.innerHTML = rows.length
+    ? `<div class="scorebox"><table><thead><tr><th>Test</th><th>Best single sitting</th><th>Superscore</th></tr></thead><tbody>${rows.join('')}</tbody></table>${comps.length?`<div class="comp">${comps.join('<br>')}</div>`:''}</div>`
+    : `<p class="hint">Your best single sitting and superscore appear here once you enter a score.</p>`;
+}
+
+// ---------- Evaluation ----------
+function evalPair(school){
+  const now = evalSchool(school, official(), state.cycle);
+  const then = evalSchool(school, projected(), state.cycle);
+  return {school, now, then, cmp: compareEval(now, then)};
+}
+const statusOf = ev => ev.best ? ev.best.status : null;
+const statusPill = st => st ? `<span class="pill p-${st}">${STATUS[st]}</span>` : '';
+function nonePill(ev){
+  const t = ev.verdict==='free' ? 'Test-free' : ev.verdict==='norange' ? 'No published range' : 'No score yet';
+  return `<span class="pill p-none">${t}</span>`;
+}
+const bandPill = ev => ev.best ? `<span class="pill p-${ev.best.status}">${BAND[ev.best.rank]}</span>` : nonePill(ev);
+function counted(test, school){
+  const v = test==='SAT' ? school.sS : school.sA;
+  return v==='y' ? 'superscore' : 'best single sitting';
+}
+function policyText(s){
+  const p = policyFor(s, state.cycle);
+  if (p==='free') return 'Test-free: SAT and ACT scores are not considered';
+  if (p==='req') return `Required for fall ${state.cycle} entry`;
+  return `Test-optional for fall ${state.cycle} entry${state.cycle===2027 && s.p28==='req' ? '; required from fall 2028' : ''}`;
+}
+function superText(s){
+  const one = (T,v) => v==='y' ? `${T}: superscores` : v==='w' ? `${T}: partial superscoring (counted here as best single sitting)` : `${T}: best single sitting only`;
+  if (s.sS==='y' && s.sA==='y') return 'Superscores both the SAT and ACT';
+  return `${one('SAT',s.sS)}. ${one('ACT',s.sA)}.`;
+}
+function advice(ev){
+  const b = ev.best;
+  switch(ev.verdict){
+    case 'submit': return `Send scores.`;
+    case 'borderline': return `Judgment call: send if your grades and courses are strong here.`;
+    case 'withhold': return `Apply test-optional unless you raise your score.`;
+    case 'required': return b.rank===0 ? `You have to send scores, and you're below their range, so a retake matters most here.` : `You have to send scores; send your best.`;
+    default: return '';
+  }
+}
+function positionSentence(c, school, who){
+  const [lo,hi] = c.range, mid = midOf(c.range, c.cmpTest), u = c.cmpTest==='SAT' ? 'points' : (n=>n===1?'point':'points');
+  const pts = n => `${n} ${typeof u==='function'?u(n):u}`;
+  const label = `${who} ${c.test} ${counted(c.test, school)} of ${c.score}${c.concorded?` (about ${c.cmpScore} on the ${c.cmpTest})`:''}`;
+  const s = c.cmpScore;
+  if (s < lo) return `${label} is ${pts(lo-s)} below their 25th percentile (${lo}).`;
+  if (s > hi) return `${label} is ${pts(s-hi)} above their 75th percentile (${hi}).`;
+  if (s === hi) return `${label} is right at their 75th percentile (${hi}), the top of their middle 50%.`;
+  if (s >= mid) return `${label} is in the upper half of their range, at or above the midpoint of ${mid}.`;
+  return `${label} is in the lower half of their range, ${pts(mid-s)} below the midpoint of ${mid}.`;
+}
+function chart(now, then, showT){
+  const c = now.best || then.best; if (!c) return '';
+  const T = c.cmpTest, [lo,hi] = c.range;
+  const pick = ev => { if (!ev.best) return null; const x = ev.cands.find(k=>k.cmpTest===T) ; return x ? x.cmpScore : null; };
+  const vN = now.best ? pick(now) : null, vT = showT ? pick(then) : null;
+  const vals = [lo,hi].concat([vN,vT].filter(v=>v!=null));
+  const span = Math.max(hi-lo, T==='SAT'?80:3);
+  const dlo = Math.min(...vals) - span*0.45, dhi = Math.max(...vals) + span*0.45;
+  const P = v => ((v-dlo)/(dhi-dlo)*100).toFixed(2);
+  let h = `<div class="track"></div><div class="band" style="left:${P(lo)}%;width:${Math.max(1,P(hi)-P(lo))}%"></div>`;
+  h += lo===hi ? `<span class="end c" style="left:${P(lo)}%">${lo}<small>25th–75th</small></span>`
+               : `<span class="end l" style="left:${P(lo)}%">${lo}<small>25th</small></span><span class="end r" style="left:${P(hi)}%">${hi}<small>75th</small></span>`;
+  const approx = c.concorded ? '≈' : '';
+  if (vN!=null) h += `<i class="mk" style="left:${P(vN)}%"></i><span class="mlab" style="left:${P(vN)}%;top:0">You: ${approx}${vN}</span>`;
+  if (vT!=null && vT!==vN){
+    if (vN!=null) h += `<i class="arrow" style="left:${Math.min(P(vN),P(vT))}%;width:${Math.abs(P(vT)-P(vN))}%"></i>`;
+    const close = vN!=null;
+    h += `<i class="mk tgt" style="left:${P(vT)}%"></i><span class="mlab tgt" style="left:${P(vT)}%;top:${close?18:0}px">Target: ${approx}${vT}</span>`;
+  }
+  return `<div class="pos" role="img" aria-label="Their middle 50% is ${lo} to ${hi}${vN!=null?`; your score is ${vN}`:''}${vT!=null&&vT!==vN?`; your target is ${vT}`:''}">${h}</div>`;
+}
+
+// ---------- Colleges ----------
+function sortPairs(pairs){
+  const key = p => { const b = p.now.best || p.then.best; return b ? b.rank + b.pos/10 : 99; };
+  const arr = pairs.slice();
+  if (state.sort==='name') arr.sort((a,b)=>a.school.n.localeCompare(b.school.n));
+  else if (state.sort==='low') arr.sort((a,b)=>key(a)-key(b));
+  else if (state.sort==='high') arr.sort((a,b)=>{ const ka=key(a), kb=key(b); return (kb===99?-99:kb)-(ka===99?-99:ka); });
+  return arr;
+}
+function renderTable(pairs){
+  const el = $('#table');
+  if (!pairs.length){ el.innerHTML = `<div class="emptylist">Your list is empty. Search above to add colleges, or switch to “All colleges”.</div>`; return; }
+  const inList = new Set(state.list); const tg = hasTarget();
+  el.innerHTML = sortPairs(pairs).map(({school:s, now, then})=>{
+    const stN = statusOf(now), stT = statusOf(then);
+    const rowSt = stN || (tg ? stT : null);
+    const head = stN ? statusPill(stN) : nonePill(now);
+    const withT = tg && stT && stT!==stN ? `<span class="withtgt">with target ${statusPill(stT)}</span>` : '';
+    const ctrl = state.view==='list'
+      ? `<button type="button" class="rowbtn" data-remove="${s.id}" aria-label="Remove ${esc(s.n)} from your list" title="Remove from list">×</button>`
+      : `<button type="button" class="addbtn" data-toggle="${s.id}" aria-pressed="${inList.has(s.id)}">${inList.has(s.id)?'On list':'Add'}</button>`;
+    const where = [];
+    if (now.best) where.push(`<p>${positionSentence(now.best, s, 'Your')}</p>`);
+    if (tg && then.best && (!now.best || then.best.cmpScore!==now.best.cmpScore || then.best.test!==now.best.test)) where.push(`<p class="tg">${positionSentence(then.best, s, 'Your target')}</p>`);
+    if (!now.best && !then.best && now.verdict!=='free') where.push(`<p class="nx">${now.verdict==='norange'?'This college hasn’t published a range to compare against.':'Enter a score to see where you land.'}</p>`);
+    const adv = advice(now);
+    const send = now.cands && now.cands.length>1 ? `<p class="nx">Your ${now.best.test} is the stronger one to send here.</p>` : '';
+    const detail = `<div class="detail">
+      <div class="where">${where.join('')}${chart(now, then, tg)}${send}</div>
+      <dl class="facts">
+        <dt>Testing</dt><dd>${policyText(s)}</dd>
+        ${policyFor(s,state.cycle)!=='free' ? `<dt>Scores counted</dt><dd>${superText(s)}</dd>
+        <dt>Middle 50%</dt><dd class="num">${s.s?`SAT ${s.s[0]}–${s.s[1]}`:''}${s.s&&s.a?'<br>':''}${s.a?`ACT ${s.a[0]}–${s.a[1]}`:''}${!s.s&&!s.a?'Not published':''}</dd>` : ''}
+        ${adv ? `<dt>Should you send?</dt><dd>${adv}</dd>` : ''}
+        ${s.note ? `<dt>Note</dt><dd>${esc(s.note)}</dd>` : ''}
+      </dl>
+    </div>`;
+    return `<details class="col${rowSt?' st-'+rowSt:''}" data-id="${s.id}"${openRows.has(s.id)?' open':''}>
+      <summary><span class="nm">${esc(s.n)}</span><span class="right"><span class="stat">${head}${withT}</span>${ctrl}<span class="chev" aria-hidden="true"></span></span></summary>
+      ${detail}
+    </details>`;
+  }).join('');
+}
+
+// ---------- Summary (bottom) ----------
+function targetGains(){
+  // gain of target-implied superscore over current superscore, per test with a target
+  const out = [];
+  for (const T of ['SAT','ACT']){
+    if (!targets().some(s=>s.test===T && sitValid(s))) continue;
+    const fn = T==='SAT'?satScore:actScore;
+    const cur = fn(official().filter(s=>s.test===T),'super'), pro = fn(projected().filter(s=>s.test===T),'super');
+    out.push({T, cur: cur?cur.total:null, pro: pro.total, gain: cur ? pro.total-cur.total : null, small: cur ? (T==='SAT' ? pro.total-cur.total < 30 : pro.total-cur.total < 1) : false});
+  }
+  return out;
+}
+const plural = (n, one, many) => `${n} ${n===1?one:many}`;
+function moveList(title, arr){
+  if (!arr.length) return '';
+  return `<div class="mv"><h3>${title}</h3><ul class="moves">${arr.map(x=>`<li><b>${esc(x.school.n)}</b> ${statusPill(x.now.best.status)} <span class="to" aria-label="becomes">→</span> ${statusPill(x.then.best.status)}</li>`).join('')}</ul></div>`;
+}
+function scaleBar(level){
+  return `<ol class="scale" aria-label="Retake scale">${LEVELS.map((l,i)=>`<li class="${i===level?'on':''}"${i===level?' aria-current="true"':''}>${l}</li>`).join('')}</ol>`;
+}
+function renderSignal(pairs){
+  const el = $('#signal');
+  const anyOfficial = official().some(sitValid);
+  const tg = hasTarget();
+  const scored = pairs.filter(p=>p.now.best || p.then.best);
+  const box = (cls, inner) => `<div class="signal ${cls}">${inner}</div>`;
+  if (!state.list.length){ el.innerHTML = box('', `<h2>Add colleges to your list</h2><p>Search for a college above the list, or switch to “All colleges” and add from there.</p>`); return; }
+  if (!anyOfficial && !tg){ el.innerHTML = box('', `<h2>Add your scores to get started</h2><p>Enter an official SAT or ACT in the left column, then a realistic target score.</p>`); return; }
+  if (!anyOfficial){
+    const c = {below:0,in:0,above:0}; scored.forEach(x=>{ if (x.then.best) c[x.then.best.status]++; });
+    el.innerHTML = box('', `<h2>Enter an official score to get a verdict</h2><p>With your target alone, you'd be above range at ${c.above}, in range at ${c.in} and below range at ${c.below} of the colleges on your list. The verdict compares your target with a score you already have.</p>`);
+    return;
+  }
+  let inner;
+  if (!tg){
+    const below = scored.filter(x=>x.now.best && x.now.best.status==='below').length, inR = scored.filter(x=>x.now.best && x.now.best.status==='in').length;
+    if (!below && !inR) inner = scaleBar(3) + `<h2>No retake</h2><p>You're already above range at every college on your list that considers scores.</p>`;
+    else inner = `<h2>Add a target score to get a verdict</h2><p>You’re below range at ${plural(below,'college','colleges')} and in range at ${plural(inR,'college','colleges')} on your list.</p>`;
+    el.innerHTML = box('', inner + whatItTakes(null)); return;
+  }
+  const gains = targetGains();
+  const smallGain = gains.length>0 && gains.every(g=>g.small);
+  const v = retakeVerdict(scored, smallGain);
+  inner = scaleBar(v.level) + `<h2>${v.label}</h2>`;
+  const moved = movedSentence(v, 'If you hit your target, you’d');
+  if (moved) inner += `<p>${moved}</p><div class="mvs">${moveList('Moving up from below range', v.big)}${moveList('Moving from in range to above range', v.small)}</div>`;
+  else if (!v.notGreen) inner += `<p>You’re already above range at every college on your list.</p>`;
+  el.innerHTML = box('lv'+v.level, inner + whatItTakes(v.level));
+}
+function joinNames(arr){
+  const n = arr.map(x=>x.school.n);
+  return n.length>1 ? n.slice(0,-1).join(', ')+' and '+n[n.length-1] : n[0];
+}
+// "…move into range at A and B, and above range at C." grouped by where each college ends up
+function movedSentence(v, lead){
+  const moved = v.big.concat(v.small);
+  const toIn = moved.filter(x=>x.then.best.status==='in'), toAbove = moved.filter(x=>x.then.best.status==='above');
+  const parts = [];
+  if (toIn.length) parts.push(`into range at ${joinNames(toIn)}`);
+  if (toAbove.length) parts.push(`above range at ${joinNames(toAbove)}`);
+  if (!parts.length) return '';
+  return `${lead} move ${parts.join(', and ')}.`;
+}
+function whatItTakes(level){
+  // the next level up: Retake if the verdict is already Lean retake, otherwise Lean retake
+  if (level===0) return '';
+  const goal = level===1 ? 0 : 1, goalLabel = LEVELS[goal];
+  const schools = state.list.map(byId).filter(Boolean);
+  const rows = ['SAT','ACT'].map(T=>scoreNeeded(schools, official(), state.cycle, T, goal)).filter(Boolean).map(r=>{
+    const unit = r.T==='SAT' ? 'points' : (r.gain===1?'point':'points');
+    return `<p class="need">Minimum score to justify a retake: <b class="num">${r.T} ${r.score}</b></p><p>If you can realistically score <b>${r.score}</b> on the ${r.T} (${r.gain} ${unit} above your superscore), the verdict becomes ${r.v.label}. ${movedSentence(r.v, 'You’d')}</p>`;
+  });
+  if (!rows.length) return '';
+  return `<div class="wins"><h3>What it would take to reach ${goalLabel}${goal===1?' or higher':''}</h3>${rows.join('')}</div>`;
+}
+
+function renderResults(){
+  const listSchools = state.list.map(byId).filter(Boolean);
+  const pairsList = listSchools.map(evalPair);
+  renderScorebox();
+  renderTable(state.view==='all' ? allSchools().map(evalPair) : pairsList);
+  renderSignal(pairsList);
+  document.querySelectorAll('#cycle button').forEach(b=>b.setAttribute('aria-pressed', String(+b.dataset.cycle===state.cycle)));
+  document.querySelectorAll('#view button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.view===state.view)));
+  $('#sort').value = state.sort;
+  document.querySelector('#view [data-view="list"]').textContent = `My list (${listSchools.length})`;
+  document.querySelector('#view [data-view="all"]').textContent = `All colleges (${allSchools().length})`;
+}
+
+// ---------- Controls ----------
+$('#cycle').addEventListener('click', e=>{ const b=e.target.closest('[data-cycle]'); if(!b) return; state.cycle=+b.dataset.cycle; save(); renderResults(); });
+$('#view').addEventListener('click', e=>{ const b=e.target.closest('[data-view]'); if(!b) return; state.view=b.dataset.view; save(); renderResults(); });
+$('#sort').addEventListener('change', e=>{ state.sort=e.target.value; save(); renderResults(); });
+$('#table').addEventListener('click', e=>{
+  const r = e.target.closest('[data-remove]'), t = e.target.closest('[data-toggle]');
+  if (!r && !t) return;
+  e.preventDefault();
+  if (r) state.list = state.list.filter(id=>id!==r.dataset.remove);
+  else { const id=t.dataset.toggle; state.list = state.list.includes(id) ? state.list.filter(x=>x!==id) : state.list.concat(id); }
+  save(); renderResults();
+});
+$('#table').addEventListener('toggle', e=>{ const d=e.target; if (!d.dataset || !d.dataset.id) return; d.open ? openRows.add(d.dataset.id) : openRows.delete(d.dataset.id); }, true);
+// search
+const search=$('#search'), sugg=$('#sugg');
+function showSugg(){
+  const q = search.value.trim().toLowerCase();
+  if (!q){ sugg.classList.remove('open'); sugg.innerHTML=''; return; }
+  const m = allSchools().filter(s=>s.n.toLowerCase().includes(q)).slice(0,8);
+  sugg.innerHTML = m.length ? m.map(s=>`<button type="button" role="option" data-pick="${s.id}"><span>${esc(s.n)}</span><small>${state.list.includes(s.id)?'On your list':(s.s?`SAT ${s.s[0]}–${s.s[1]}`:(policyFor(s,state.cycle)==='free'?'Test-free':''))}</small></button>`).join('')
+    : `<div class="hint" style="padding:8px 10px;margin:0">No match. Use “College not listed? Add it by hand” below the list.</div>`;
+  sugg.classList.add('open');
+}
+function pick(id){ if (!state.list.includes(id)) state.list.push(id); search.value=''; showSugg(); save(); renderResults(); }
+search.addEventListener('input', showSugg);
+search.addEventListener('keydown', e=>{ if (e.key==='Enter'){ e.preventDefault(); const f=sugg.querySelector('[data-pick]'); if (f) pick(f.dataset.pick); } if (e.key==='Escape'){ search.value=''; showSugg(); } if (e.key==='ArrowDown'){ const f=sugg.querySelector('[data-pick]'); if(f){e.preventDefault(); f.focus();} } });
+sugg.addEventListener('click', e=>{ const b=e.target.closest('[data-pick]'); if (b) pick(b.dataset.pick); });
+sugg.addEventListener('keydown', e=>{ const items=[...sugg.querySelectorAll('[data-pick]')], i=items.indexOf(document.activeElement); if(e.key==='ArrowDown'&&i<items.length-1){e.preventDefault();items[i+1].focus();} if(e.key==='ArrowUp'){e.preventDefault(); (i>0?items[i-1]:search).focus();} });
+document.addEventListener('click', e=>{ if (!e.target.closest('.adder')) sugg.classList.remove('open'); });
+// custom college
+$('#cform').addEventListener('submit', e=>{
+  e.preventDefault();
+  const v = id => { const x=$(id).value; return x===''?null:Number(x); };
+  const name = $('#c-name').value.trim(), s25=v('#c-s25'), s75=v('#c-s75'), a25=v('#c-a25'), a75=v('#c-a75');
+  const err = $('#c-err'); err.textContent='';
+  if (!name) { err.textContent='Enter the college name.'; return; }
+  const pol = $('#c-pol').value;
+  const sOK = s25!=null && s75!=null, aOK = a25!=null && a75!=null;
+  if (pol!=='free' && !sOK && !aOK) { err.textContent='Enter both the 25th and 75th percentile for the SAT, the ACT, or both.'; return; }
+  if (sOK && (s25<400||s75>1600||s25>s75)) { err.textContent='SAT percentiles must be between 400 and 1600, with the 25th below the 75th.'; return; }
+  if (aOK && (a25<1||a75>36||a25>a75)) { err.textContent='ACT percentiles must be between 1 and 36, with the 25th below the 75th.'; return; }
+  const sc = {n:name, k:'C', s:sOK?[s25,s75]:null, a:aOK?[a25,a75]:null, p27:pol, p28:pol, sS:$('#c-ss').value, sA:$('#c-sa').value, note:'Added by you', id:'c'+Date.now()};
+  state.custom = (state.custom||[]).concat(sc); state.list.push(sc.id);
+  e.target.reset(); save(); renderResults();
+});
+// copy summary
+$('#copy').addEventListener('click', async ()=>{
+  const lines = [];
+  ['SAT','ACT'].forEach(T=>{ const fn=T==='SAT'?satScore:actScore; const o=official().filter(s=>s.test===T); const sup=fn(o,'super'), sing=fn(o,'single'); if (sup) lines.push(`${T}: best single sitting ${sing.total}, superscore ${sup.total}`); });
+  if (hasTarget()) ['SAT','ACT'].forEach(T=>{ const t=targets().find(s=>s.test===T && sitValid(s)); if (t) lines.push(`${T} target: ${sitTotal(t)}`); });
+  lines.push('');
+  state.list.map(byId).filter(Boolean).map(evalPair).forEach(({school:s,now,then})=>{
+    const b = now.best ? STATUS[now.best.status].toLowerCase() : (now.verdict==='free'?'test-free':'no placement');
+    const t = hasTarget() && then.best && (!now.best || then.best.status!==now.best.status) ? ` (${STATUS[then.best.status].toLowerCase()} with target)` : '';
+    lines.push(`${s.n}: ${b}${t}`);
+  });
+  const h2 = document.querySelector('#signal h2'); if (h2) lines.unshift(`Verdict: ${h2.textContent}`, '');
+  const txt = `SAT/ACT retake check (applying for fall ${state.cycle})\n` + lines.join('\n');
+  const toast=$('#toast');
+  try { await navigator.clipboard.writeText(txt); toast.textContent='Summary copied.'; }
+  catch(e){ toast.textContent='Copying was blocked by your browser. Select the text on the page instead.'; }
+  setTimeout(()=>toast.textContent='', 3500);
+});
+
+renderSittings(); renderResults();
+</script>
+</body>
+</html>
