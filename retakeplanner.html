@@ -199,8 +199,8 @@ details.custom[open]{background:var(--surface);border:1px solid var(--rule);bord
 .scale li{font-size:12.5px;font-weight:500;text-transform:uppercase;letter-spacing:var(--track);text-align:center;padding:7px 4px;border:1px solid var(--rule);border-radius:.45rem;color:var(--muted);line-height:1.2}
 .scale li.on{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:600}
 .signal .adj{font-size:14px;color:var(--muted)}
-.mvs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 24px}
-.mv h3{font-size:.85rem;font-weight:500;text-transform:uppercase;letter-spacing:var(--track);color:var(--muted);margin:16px 0 0}
+.mvs{display:grid;gap:4px}
+.mv h3{font-size:.94rem;font-weight:600;color:var(--ink);margin:16px 0 0}
 .signal h2{font-size:clamp(26px,3vw,34px);font-weight:600;letter-spacing:-.04rem;text-transform:uppercase}
 .signal p{margin:6px 0 0;max-width:70ch}
 .moves{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
@@ -924,7 +924,7 @@ function renderSignal(pairs){
   const v = retakeVerdict(scored, smallGain);
   inner = scaleBar(v.level) + `<h2>${v.label}</h2>`;
   const moved = movedSentence(v, 'If you hit your target, you’d');
-  if (moved) inner += `<p>${moved}</p><div class="mvs">${moveList('Moving up from below range', v.big)}${moveList('Moving from in range to above range', v.small)}</div>`;
+  if (moved) inner += `<p>${moved}</p><div class="mvs">${moveList('Below range → In range', v.big.filter(m=>m.then.best.status==='in'))}${moveList('Below range → Above range', v.big.filter(m=>m.then.best.status==='above'))}${moveList('In range → Above range', v.small)}</div>`;
   else if (!v.notGreen) inner += `<p>You’re already above range at every college on your list.</p>`;
   el.innerHTML = box('lv'+v.level, inner + whatItTakes(v.level));
 }
