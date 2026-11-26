@@ -60,8 +60,6 @@ a{color:var(--accent)}
 .home:hover{opacity:.8}
 .top h1{font-size:clamp(30px,6vw,56px);font-weight:600;line-height:1;letter-spacing:-.08rem;text-transform:uppercase}
 .top p{margin:12px 0 0;max-width:60ch;color:var(--muted)}
-.cycle{display:flex;flex-direction:column;gap:6px}
-.cycle span{font-size:.94rem;font-weight:500;text-transform:uppercase;letter-spacing:var(--track);color:var(--muted)}
 
 .seg{display:inline-flex;border:1.5px solid var(--stroke);border-radius:.6rem;padding:2px;background:var(--surface)}
 .seg button{border:0;background:transparent;padding:6px 12px;border-radius:.45rem;cursor:pointer;font-size:14px;color:var(--muted);white-space:nowrap}
@@ -246,13 +244,6 @@ footer.how ul{padding-left:18px;margin:6px 0}
       <a class="home" href="https://willhummel.com">Will Hummel</a>
       <h1>SAT &amp; ACT Retake Planner</h1>
       <p>Enter your official scores and a realistic target score, based on your practice tests. See how that target score might change your standing at each college on your list, and whether a retake is worthwhile.</p>
-    </div>
-    <div class="cycle">
-      <span id="cycle-label">I'm applying for</span>
-      <div class="seg" role="group" aria-labelledby="cycle-label" id="cycle">
-        <button type="button" data-cycle="2027">Fall 2027 entry</button>
-        <button type="button" data-cycle="2028">Fall 2028 entry</button>
-      </div>
     </div>
   </header>
 
@@ -536,11 +527,11 @@ const SCHOOLS = [
   R('Auburn','U',[1260,1380],[26,31],'req',{note:'Recommends sending all scores'}),
   R('Ohio State','U',[1300,1440],[27,32],'req'),
   // Optional for fall 2027, required for fall 2028
-  R('Princeton','U',[1490,1560],[34,35],'opt',{p28:'req',sA:'n',note:'Required again from fall 2028 entry'}),
-  R('Columbia','U',[1510,1560],[34,36],'opt',{p28:'req',note:'Required again from fall 2028 entry'}),
-  R('Notre Dame','U',[1460,1540],[33,35],'opt',{p28:'req',note:'Required again from fall 2028 entry'}),
-  R('Claremont McKenna','L',[1480,1540],[33,35],'opt',{p28:'req',note:'Required again from fall 2028 entry'}),
-  R('University of Alabama','U',[1100,1360],[22,31],'opt',{p28:'req',note:'Fall 2027: required only below a 3.0 GPA'}),
+  R('Princeton','U',[1490,1560],[34,35],'opt',{p28:'req',sA:'n'}),
+  R('Columbia','U',[1510,1560],[34,36],'opt',{p28:'req'}),
+  R('Notre Dame','U',[1460,1540],[33,35],'opt',{p28:'req'}),
+  R('Claremont McKenna','L',[1480,1540],[33,35],'opt',{p28:'req'}),
+  R('University of Alabama','U',[1100,1360],[22,31],'opt',{p28:'req'}),
   // Test-optional universities
   R('UChicago','U',[1510,1560],[34,35],'opt'),
   R('Duke','U',[1510,1570],[34,35],'opt'),
@@ -665,7 +656,7 @@ const openRows = new Set();
 function exampleState(){
   const ids = n => SCHOOLS.find(s=>s.n===n).id;
   return {
-    cycle:2027, view:'list', sort:'list', example:true, custom:[],
+    cycle:2028, view:'list', sort:'list', example:true, custom:[],
     sittings:[
       mkSit('SAT','official','March 2026',{erw:690, math:720}),
       mkSit('SAT','official','August 2026',{erw:720, math:700}),
@@ -677,6 +668,7 @@ function exampleState(){
 let state;
 try { state = JSON.parse(localStorage.getItem(KEY)); } catch(e){ state = null; }
 if (!state || !Array.isArray(state.sittings)) state = exampleState();
+state.cycle = 2028; // everyone using this applies for fall 2028 or later
 state.sittings.forEach(s=>{ const n=parseInt(String(s.id).slice(1)); if (n>=uid) uid=n+1; });
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
 
@@ -784,8 +776,8 @@ function counted(test, school){
 function policyText(s){
   const p = policyFor(s, state.cycle);
   if (p==='free') return 'Test-free: SAT and ACT scores are not considered';
-  if (p==='req') return `Required for fall ${state.cycle} entry`;
-  return `Test-optional for fall ${state.cycle} entry${state.cycle===2027 && s.p28==='req' ? '; required from fall 2028' : ''}`;
+  if (p==='req') return 'Required';
+  return 'Test-optional';
 }
 function superText(s){
   const one = (T,v) => v==='y' ? `${T}: superscores` : v==='w' ? `${T}: partial superscoring (counted here as best single sitting)` : `${T}: best single sitting only`;
@@ -961,7 +953,6 @@ function renderResults(){
   renderScorebox();
   renderTable(state.view==='all' ? allSchools().map(evalPair) : pairsList);
   renderSignal(pairsList);
-  document.querySelectorAll('#cycle button').forEach(b=>b.setAttribute('aria-pressed', String(+b.dataset.cycle===state.cycle)));
   document.querySelectorAll('#view button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.view===state.view)));
   $('#sort').value = state.sort;
   document.querySelector('#view [data-view="list"]').textContent = `My list (${listSchools.length})`;
@@ -969,7 +960,6 @@ function renderResults(){
 }
 
 // ---------- Controls ----------
-$('#cycle').addEventListener('click', e=>{ const b=e.target.closest('[data-cycle]'); if(!b) return; state.cycle=+b.dataset.cycle; save(); renderResults(); });
 $('#view').addEventListener('click', e=>{ const b=e.target.closest('[data-view]'); if(!b) return; state.view=b.dataset.view; save(); renderResults(); });
 $('#sort').addEventListener('change', e=>{ state.sort=e.target.value; save(); renderResults(); });
 $('#table').addEventListener('click', e=>{
@@ -1025,7 +1015,7 @@ $('#copy').addEventListener('click', async ()=>{
     lines.push(`${s.n}: ${b}${t}`);
   });
   const h2 = document.querySelector('#signal h2'); if (h2) lines.unshift(`Verdict: ${h2.textContent}`, '');
-  const txt = `SAT/ACT retake check (applying for fall ${state.cycle})\n` + lines.join('\n');
+  const txt = `SAT/ACT retake check\n` + lines.join('\n');
   const toast=$('#toast');
   try { await navigator.clipboard.writeText(txt); toast.textContent='Summary copied.'; }
   catch(e){ toast.textContent='Copying was blocked by your browser. Select the text on the page instead.'; }
