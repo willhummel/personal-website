@@ -652,12 +652,20 @@ let uid = 1;
 const mkSit = (test, kind, label, vals={}) => ({id:'t'+(uid++), test, kind, label, version:'enhanced', ...vals});
 const openRows = new Set();
 
-function blankState(){
-  return {cycle:2028, view:'list', sort:'list', example:false, custom:[], sittings:[], list:[]};
+function exampleState(){
+  const ids = n => SCHOOLS.find(s=>s.n===n).id;
+  return {
+    cycle:2028, view:'list', sort:'list', example:true, custom:[],
+    sittings:[
+      mkSit('SAT','official','March 2026',{erw:620, math:640}),
+      mkSit('SAT','target','SAT target',{erw:670, math:690}),
+    ],
+    list:['Boston University','University of Michigan','Fordham','Penn State','Clemson','Indiana University','Elon','Michigan State'].map(ids)
+  };
 }
 let state;
 try { state = JSON.parse(localStorage.getItem(KEY)); } catch(e){ state = null; }
-if (!state || !Array.isArray(state.sittings)) state = blankState();
+if (!state || !Array.isArray(state.sittings)) state = exampleState();
 state.cycle = 2028; // everyone using this applies for fall 2028 or later
 state.sittings.forEach(s=>{ const n=parseInt(String(s.id).slice(1)); if (n>=uid) uid=n+1; });
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
