@@ -652,21 +652,12 @@ let uid = 1;
 const mkSit = (test, kind, label, vals={}) => ({id:'t'+(uid++), test, kind, label, version:'enhanced', ...vals});
 const openRows = new Set();
 
-function exampleState(){
-  const ids = n => SCHOOLS.find(s=>s.n===n).id;
-  return {
-    cycle:2028, view:'list', sort:'list', example:true, custom:[],
-    sittings:[
-      mkSit('SAT','official','March 2026',{erw:690, math:720}),
-      mkSit('SAT','official','August 2026',{erw:720, math:700}),
-      mkSit('SAT','target','SAT target',{erw:730, math:740}),
-    ],
-    list:['Cornell','Georgetown','Tufts','Boston College','University of Michigan','University of Virginia','Northeastern','Wake Forest','Wellesley','Lehigh','University of Rochester','Penn State'].map(ids)
-  };
+function blankState(){
+  return {cycle:2028, view:'list', sort:'list', example:false, custom:[], sittings:[], list:[]};
 }
 let state;
 try { state = JSON.parse(localStorage.getItem(KEY)); } catch(e){ state = null; }
-if (!state || !Array.isArray(state.sittings)) state = exampleState();
+if (!state || !Array.isArray(state.sittings)) state = blankState();
 state.cycle = 2028; // everyone using this applies for fall 2028 or later
 state.sittings.forEach(s=>{ const n=parseInt(String(s.id).slice(1)); if (n>=uid) uid=n+1; });
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
@@ -896,6 +887,7 @@ function renderSignal(pairs){
   const tg = hasTarget();
   const scored = pairs.filter(p=>p.now.best || p.then.best);
   const box = (cls, inner) => `<div class="signal ${cls}">${inner}</div>`;
+  if (!state.list.length && !anyOfficial && !tg){ el.innerHTML = box('', `<h2>Add your scores and colleges</h2><p>Enter your official SAT or ACT scores on the left, then search for the colleges on your list.</p>`); return; }
   if (!state.list.length){ el.innerHTML = box('', `<h2>Add colleges to your list</h2><p>Search for a college above the list, or switch to “All colleges” and add from there.</p>`); return; }
   if (!anyOfficial && !tg){ el.innerHTML = box('', `<h2>Add your scores to get started</h2><p>Enter an official SAT or ACT in the left column, then a realistic target score.</p>`); return; }
   if (!anyOfficial){
