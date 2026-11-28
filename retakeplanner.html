@@ -657,11 +657,10 @@ function exampleState(){
   return {
     cycle:2028, view:'list', sort:'list', example:true, custom:[],
     sittings:[
-      mkSit('SAT','official','March 2026',{erw:690, math:720}),
-      mkSit('SAT','official','August 2026',{erw:720, math:700}),
-      mkSit('SAT','target','SAT target',{erw:730, math:740}),
+      mkSit('SAT','official','March 2026',{erw:620, math:640}),
+      mkSit('SAT','target','SAT target',{erw:670, math:690}),
     ],
-    list:['Cornell','Georgetown','Tufts','Boston College','University of Michigan','University of Virginia','Northeastern','Wake Forest','Wellesley','Lehigh','University of Rochester','Penn State'].map(ids)
+    list:['Boston University','University of Michigan','Fordham','Penn State','Clemson','Indiana University','Elon','Michigan State'].map(ids)
   };
 }
 let state;
@@ -896,6 +895,7 @@ function renderSignal(pairs){
   const tg = hasTarget();
   const scored = pairs.filter(p=>p.now.best || p.then.best);
   const box = (cls, inner) => `<div class="signal ${cls}">${inner}</div>`;
+  if (!state.list.length && !anyOfficial && !tg){ el.innerHTML = box('', `<h2>Add your scores and colleges</h2><p>Enter your official SAT or ACT scores on the left, then search for the colleges on your list.</p>`); return; }
   if (!state.list.length){ el.innerHTML = box('', `<h2>Add colleges to your list</h2><p>Search for a college above the list, or switch to “All colleges” and add from there.</p>`); return; }
   if (!anyOfficial && !tg){ el.innerHTML = box('', `<h2>Add your scores to get started</h2><p>Enter an official SAT or ACT in the left column, then a realistic target score.</p>`); return; }
   if (!anyOfficial){
